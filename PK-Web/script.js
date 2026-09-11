@@ -197,13 +197,12 @@
   const bloodCanvas = new BloodCanvas();
 
   // --- CREATURE SIMULATION ENGINE ---
+  // Only the authentic game creatures: Mosquito, Spider, Giant Spider, and Boss!
   const CREATURE_TYPES = [
     { type: 'mosquito', emoji: '🦟', className: 'bug-mosquito', speed: 1.8, pauseChance: 0.04, scale: 1 },
     { type: 'spider', emoji: '🕷️', className: 'bug-spider', speed: 1.1, pauseChance: 0.08, scale: 1.3 },
-    { type: 'fly', emoji: '🪰', className: 'bug-fly', speed: 2.8, pauseChance: 0.02, scale: 0.9 },
-    { type: 'bat', emoji: '🦇', className: 'bug-bat', speed: 2.2, pauseChance: 0.01, scale: 1.5 },
-    { type: 'ant', emoji: '🐜', className: 'bug-ant', speed: 0.9, pauseChance: 0.05, scale: 0.7 },
-    { type: 'boss', emoji: '👑', className: 'bug-boss', speed: 1.4, pauseChance: 0.03, scale: 2.2 }
+    { type: 'giant_spider', emoji: '🕷️', className: 'bug-giant-spider', speed: 1.4, pauseChance: 0.06, scale: 2.0 },
+    { type: 'boss', emoji: '👑', className: 'bug-boss', speed: 1.2, pauseChance: 0.03, scale: 2.6 }
   ];
 
   class LiveCreature {
@@ -215,14 +214,12 @@
       if (forcedType) {
         this.config = CREATURE_TYPES.find(c => c.type === forcedType) || CREATURE_TYPES[0];
       } else {
-        // Weighted random: Mosquitoes and flies are most common
+        // Weighted random: Mosquito (50%), Spider (30%), Giant Spider (15%), Boss (5%)
         const rand = Math.random();
-        if (rand < 0.40) this.config = CREATURE_TYPES[0]; // Mosquito
-        else if (rand < 0.65) this.config = CREATURE_TYPES[1]; // Spider
-        else if (rand < 0.85) this.config = CREATURE_TYPES[2]; // Fly
-        else if (rand < 0.93) this.config = CREATURE_TYPES[3]; // Bat
-        else if (rand < 0.98) this.config = CREATURE_TYPES[4]; // Ant
-        else this.config = CREATURE_TYPES[5]; // Rare Boss
+        if (rand < 0.50) this.config = CREATURE_TYPES[0]; // Mosquito
+        else if (rand < 0.80) this.config = CREATURE_TYPES[1]; // Spider
+        else if (rand < 0.95) this.config = CREATURE_TYPES[2]; // Giant Spider
+        else this.config = CREATURE_TYPES[3]; // Rare Boss Monster
       }
 
       this.el = document.createElement('div');
@@ -452,70 +449,6 @@
     });
   }
 
-  // --- TRAILER MODAL WITH LIVE BUG SANDBOX ---
-  function initTrailerModal() {
-    const trailerBtn = document.getElementById('trailer-btn');
-    const modal = document.getElementById('trailer-modal');
-    const closeBtn = document.getElementById('close-modal-btn');
-    const sandbox = document.getElementById('sandbox-canvas');
-    const modalDownloadBtn = document.getElementById('modal-download-btn');
-
-    if (!trailerBtn || !modal) return;
-
-    let sandboxCreatures = [];
-    let sandboxLoopId = null;
-
-    function openModal() {
-      modal.classList.add('open');
-      modal.setAttribute('aria-hidden', 'false');
-      startSandbox();
-    }
-
-    function closeModal() {
-      modal.classList.remove('open');
-      modal.setAttribute('aria-hidden', 'true');
-      stopSandbox();
-    }
-
-    function startSandbox() {
-      if (!sandbox) return;
-      // Clear old bugs
-      sandbox.querySelectorAll('.live-bug').forEach(b => b.remove());
-      sandboxCreatures = [];
-
-      // Spawn 5 frantic bugs in sandbox
-      for (let i = 0; i < 6; i++) {
-        sandboxCreatures.push(new LiveCreature(sandbox));
-      }
-
-      function loop() {
-        if (!modal.classList.contains('open')) return;
-        sandboxCreatures.forEach(c => c.update());
-        sandboxLoopId = requestAnimationFrame(loop);
-      }
-      loop();
-    }
-
-    function stopSandbox() {
-      if (sandboxLoopId) cancelAnimationFrame(sandboxLoopId);
-      sandboxCreatures = [];
-    }
-
-    trailerBtn.addEventListener('click', openModal);
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-    if (modalDownloadBtn) modalDownloadBtn.addEventListener('click', closeModal);
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
-    });
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.classList.contains('open')) {
-        closeModal();
-      }
-    });
-  }
-
   // --- SOUND TOGGLE BUTTON ---
   function initSoundToggle() {
     const toggleBtn = document.getElementById('sound-toggle');
@@ -534,7 +467,6 @@
     initCreatures();
     initCardPokes();
     initMobileMenu();
-    initTrailerModal();
     initSoundToggle();
     console.log('🦟 Pandara Kothuk Web Engine initialized. Ready to swat bugs!');
   });

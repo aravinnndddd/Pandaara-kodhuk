@@ -317,6 +317,11 @@ h1, h2, h3, h4 {
   box-shadow: var(--shadow-comic-sm);
 }
 
+.sketch-btn-large {
+  font-size: 1.45rem;
+  padding: 14px 32px;
+}
+
 .sketch-btn-download {
   font-size: 1.8rem;
   padding: 16px 40px;
@@ -376,17 +381,13 @@ h1, h2, h3, h4 {
 .live-bug.bug-spider {
   font-size: 2.6rem;
 }
-.live-bug.bug-fly {
-  font-size: 1.8rem;
-}
-.live-bug.bug-bat {
-  font-size: 2.8rem;
+.live-bug.bug-giant-spider {
+  font-size: 3.8rem;
+  filter: drop-shadow(3px 3px 0px rgba(180, 0, 0, 0.4));
 }
 .live-bug.bug-boss {
-  font-size: 3.5rem;
-}
-.live-bug.bug-ant {
-  font-size: 1.4rem;
+  font-size: 4.2rem;
+  filter: drop-shadow(4px 4px 0px rgba(211, 47, 47, 0.6));
 }
 
 /* Buzz vibration animation */
@@ -1401,109 +1402,6 @@ h1, h2, h3, h4 {
   flex-wrap: wrap;
   gap: 1rem;
   font-family: var(--font-hand);
-  font-size: 1.1rem;
-  color: var(--ink-pencil);
-}
-
-/* ==========================================================================
-   TRAILER MODAL
-   ========================================================================== */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1500;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  padding: 1.5rem;
-}
-
-.modal-backdrop.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.modal-dialog {
-  position: relative;
-  background: var(--bg-white);
-  border: 4px solid var(--ink-black);
-  border-radius: var(--wobble-1);
-  box-shadow: 10px 10px 0px #000;
-  max-width: 700px;
-  width: 100%;
-  padding: 2rem;
-  text-align: center;
-}
-
-.modal-close-btn {
-  position: absolute;
-  top: -16px;
-  right: -16px;
-  width: 40px;
-  height: 40px;
-  background: var(--blood-red);
-  color: #fff;
-  border: 3px solid var(--ink-black);
-  border-radius: 50%;
-  font-family: var(--font-headline);
-  font-size: 1.6rem;
-  line-height: 1;
-  box-shadow: 2px 2px 0px #000;
-  cursor: pointer;
-}
-
-.modal-header h3 {
-  font-size: 1.8rem;
-  margin-bottom: 1.25rem;
-}
-
-.trailer-screen {
-  background: #111;
-  border: 3px solid var(--ink-black);
-  border-radius: 4px;
-  padding: 1rem;
-  color: #fff;
-  min-height: 280px;
-  display: flex;
-  flex-direction: column;
-}
-
-.trailer-hud {
-  display: flex;
-  justify-content: space-between;
-  font-family: monospace;
-  font-size: 0.85rem;
-  color: #00ff00;
-  margin-bottom: 1rem;
-}
-
-.interactive-sandbox {
-  flex: 1;
-  border: 2px dashed #444;
-  position: relative;
-  overflow: hidden;
-  cursor: crosshair;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sandbox-instruction {
-  font-family: var(--font-hand);
-  font-size: 1.2rem;
-  color: #bbb;
-  pointer-events: none;
-}
-
-.modal-footer {
-  margin-top: 1.5rem;
 }
 
 /* ==========================================================================

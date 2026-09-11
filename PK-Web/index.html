@@ -149,8 +149,8 @@
 
         <div class="hero-actions">
           <div class="btn-with-arrow">
-            <a href="#download" class="sketch-btn sketch-btn-primary">
-              <span class="btn-icon">🪰</span> KILL SOME BUGS
+            <a href="#download" class="sketch-btn sketch-btn-primary sketch-btn-large">
+              <span class="btn-icon">🦟</span> KILL SOME BUGS
             </a>
             <div class="arrow-annotation left-arrow">
               <svg viewBox="0 0 70 50" width="50" height="35">
@@ -162,15 +162,15 @@
           </div>
 
           <div class="btn-with-arrow">
-            <button id="trailer-btn" class="sketch-btn sketch-btn-secondary" type="button">
-              <span class="btn-icon">▶</span> WATCH TRAILER
-            </button>
+            <a href="#story" class="sketch-btn sketch-btn-secondary sketch-btn-large">
+              <span class="btn-icon">📖</span> READ THE STORY
+            </a>
             <div class="arrow-annotation right-arrow">
               <svg viewBox="0 0 70 50" width="50" height="35">
                 <path d="M 10 5 Q 40 5 55 35 M 55 35 L 42 32 M 55 35 L 52 20" fill="none" stroke="#111"
                   stroke-width="2.5" stroke-linecap="round" />
               </svg>
-              <span class="arrow-caption">See the chaos!</span>
+              <span class="arrow-caption">How it started!</span>
             </div>
           </div>
         </div>
@@ -193,7 +193,7 @@
             <div class="stat-label">Stupid Weapons</div>
           </div>
           <div class="stat-card" style="--rot: 1deg;">
-            <div class="stat-num">20+</div>
+            <div class="stat-num">4</div>
             <div class="stat-label">Creatures & Bosses</div>
           </div>
           <div class="stat-card" style="--rot: -1.5deg;">
@@ -285,60 +285,41 @@
             <button class="poke-btn" type="button">SMACK IT! 🩸</button>
           </div>
 
-          <!-- Fly -->
-          <div class="creature-card" data-creature="fly" style="--rot: -2deg;">
+          <!-- Giant Spider -->
+          <div class="creature-card card-giant-spider" data-creature="giant_spider" style="--rot: -2deg;">
             <div class="card-tape"></div>
             <div class="card-sketch-art">
-              <svg viewBox="0 0 120 120" width="90" height="90" class="creature-svg">
-                <!-- Round body -->
-                <ellipse cx="60" cy="65" rx="16" ry="20" fill="#111" />
-                <circle cx="53" cy="46" r="8" fill="#d32f2f" />
-                <circle cx="67" cy="46" r="8" fill="#d32f2f" />
-                <!-- Huge wings -->
-                <ellipse cx="44" cy="50" rx="22" ry="12" fill="none" stroke="#111" stroke-width="2.5"
-                  transform="rotate(-35 44 50)" />
-                <ellipse cx="76" cy="50" rx="22" ry="12" fill="none" stroke="#111" stroke-width="2.5"
-                  transform="rotate(35 76 50)" />
-                <!-- Legs -->
-                <line x1="46" y1="70" x2="28" y2="85" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
-                <line x1="74" y1="70" x2="92" y2="85" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
-                <line x1="50" y1="80" x2="36" y2="102" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
-                <line x1="70" y1="80" x2="84" y2="102" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
+              <svg viewBox="0 0 130 130" width="105" height="105" class="creature-svg">
+                <!-- Heavy spiked body -->
+                <ellipse cx="65" cy="58" rx="20" ry="22" fill="#111" />
+                <circle cx="65" cy="85" r="14" fill="#111" />
+                <!-- Glowing red spider markings -->
+                <polygon points="60,50 70,50 62,59 70,68 60,68 68,59" fill="#d32f2f" />
+                <!-- Giant fangs -->
+                <polygon points="59,96 61,106 63,97" fill="#d32f2f" />
+                <polygon points="67,97 69,106 71,96" fill="#d32f2f" />
+                <!-- 8 Heavy jointed barbed legs -->
+                <path d="M 52 78 Q 20 60 10 40" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 52 83 Q 15 80 8 72" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 52 88 Q 18 102 12 120" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 55 93 Q 28 122 22 130" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 78 78 Q 110 60 120 40" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 78 83 Q 115 80 122 72" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 78 88 Q 112 102 118 120" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 75 93 Q 102 122 108 130" fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" />
+                <!-- Multi red cluster eyes -->
+                <circle cx="59" cy="91" r="2.5" fill="#ff1a1a" />
+                <circle cx="71" cy="91" r="2.5" fill="#ff1a1a" />
+                <circle cx="65" cy="88" r="2" fill="#ff1a1a" />
               </svg>
             </div>
-            <h3 class="creature-name">🪰 Fly</h3>
-            <p class="creature-pitch">Small. Fast. Extremely annoying.</p>
+            <h3 class="creature-name">🕷️ Giant Spider</h3>
+            <p class="creature-pitch">Massive. Fast. Cracks your screen.</p>
             <div class="creature-intel">
-              <span>Evasion: 99%</span>
-              <span>Buzz: Irritating</span>
+              <span>Size: Huge</span>
+              <span>Hitbox: Massive</span>
             </div>
-            <button class="poke-btn" type="button">SMACK IT! 🩸</button>
-          </div>
-
-          <!-- Bat -->
-          <div class="creature-card" data-creature="bat" style="--rot: 1.5deg;">
-            <div class="card-tape"></div>
-            <div class="card-sketch-art">
-              <svg viewBox="0 0 120 120" width="90" height="90" class="creature-svg">
-                <!-- Bat body & ears -->
-                <ellipse cx="60" cy="65" rx="10" ry="16" fill="#111" />
-                <polygon points="54,50 51,36 58,45" fill="#111" />
-                <polygon points="66,50 69,36 62,45" fill="#111" />
-                <!-- Wings -->
-                <path d="M 54 60 C 35 30 10 40 5 60 C 15 65 25 60 32 72 C 40 76 48 70 54 68 Z" fill="#111" />
-                <path d="M 66 60 C 85 30 110 40 115 60 C 105 65 95 60 88 72 C 80 76 72 70 66 68 Z" fill="#111" />
-                <!-- Red Eyes -->
-                <circle cx="57" cy="54" r="1.5" fill="#d32f2f" />
-                <circle cx="63" cy="54" r="1.5" fill="#d32f2f" />
-              </svg>
-            </div>
-            <h3 class="creature-name">🦇 Bat</h3>
-            <p class="creature-pitch">It flies around and makes everything worse.</p>
-            <div class="creature-intel">
-              <span>Flight: Gliding</span>
-              <span>Nightmare: Yes</span>
-            </div>
-            <button class="poke-btn" type="button">SMACK IT! 🩸</button>
+            <button class="poke-btn btn-danger" type="button">SMACK IT! 🩸</button>
           </div>
 
           <!-- Boss -->
@@ -726,7 +707,7 @@
         <div class="download-card">
           <!-- Stray bugs buzzing near the download button -->
           <div class="download-creature dc-1">🦟</div>
-          <div class="download-creature dc-2">🪰</div>
+          <div class="download-creature dc-2">🕷️</div>
           <div class="download-creature dc-3">🕷️</div>
           <div class="download-creature dc-4">🦟</div>
 
@@ -797,30 +778,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- TRAILER MODAL -->
-  <div id="trailer-modal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <button id="close-modal-btn" class="modal-close-btn" aria-label="Close modal">×</button>
-      <div class="modal-header">
-        <h3 id="modal-title">PANDARA KOTHUK - GAMEPLAY PREVIEW 🦟</h3>
-      </div>
-      <div class="modal-body">
-        <div class="trailer-screen">
-          <div class="trailer-hud">
-            <span>🔴 REC [LIVE DESKTOP HARASSMENT]</span>
-            <span>LEVEL 4: 🩴 SLIPPER</span>
-          </div>
-          <div class="interactive-sandbox" id="sandbox-canvas">
-            <p class="sandbox-instruction">👉 Click any creature in this preview box to swat it!</p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <a href="#download" class="sketch-btn sketch-btn-small" id="modal-download-btn">DOWNLOAD FULL GAME</a>
-      </div>
-    </div>
-  </div>
 
   <script src="script.js"></script>
 </body>
