@@ -10,7 +10,7 @@
 
 ## Basic Details
 
-### Team Name: Aravind P (ottak vazhi vetti vannavan)
+### Team Name: Aravind P 
 
 ### Team Members
 - **Team Lead:** Aravind P - College of Engineering Perumon

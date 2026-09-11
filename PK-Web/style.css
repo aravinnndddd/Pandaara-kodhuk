@@ -1,0 +1,1589 @@
+/* ==========================================================================
+   PANDARA KOTHUK - OFFICIAL GAME LANDING PAGE
+   Aesthetic: Hand-Drawn Comic / Black Ink + White Paper + Blood Red Chaos
+   ========================================================================== */
+
+:root {
+  /* Core Color Palette: Pure White + Deep Black Ink + Rich Blood Red */
+  --bg-white: #ffffff;
+  --bg-cream: #fafafa;
+  --bg-paper: #fefefe;
+  --ink-black: #111111;
+  --ink-pencil: #333333;
+  --ink-gray: #777777;
+  --border-ink: #181818;
+  --blood-red: #d32f2f;
+  --blood-dark: #990000;
+  --blood-bright: #ff1e1e;
+  --tape-color: rgba(235, 230, 210, 0.75);
+
+  /* Comic & Sketch Typography */
+  --font-headline: 'Bangers', 'Impact', 'Arial Black', sans-serif;
+  --font-marker: 'Permanent Marker', 'Impact', cursive;
+  --font-hand: 'Architects Daughter', 'Patrick Hand', 'Comic Sans MS', cursive;
+  --font-malayalam: 'Caveat', 'Comic Sans MS', sans-serif;
+  --font-body: 'Patrick Hand', 'Comic Sans MS', sans-serif;
+
+  /* Comic Shadow Tokens (Hard, Non-diffused) */
+  --shadow-comic-sm: 3px 3px 0px var(--ink-black);
+  --shadow-comic: 5px 5px 0px var(--ink-black);
+  --shadow-comic-lg: 8px 8px 0px var(--ink-black);
+  --shadow-blood: 5px 5px 0px var(--blood-red);
+
+  /* Hand-drawn Wobbly Border Radius Presets */
+  --wobble-1: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  --wobble-2: 20px 255px 20px 255px / 255px 20px 255px 20px;
+  --wobble-btn: 255px 25px 225px 25px / 25px 225px 25px 255px;
+
+  /* Layout Widths */
+  --max-width: 1200px;
+}
+
+/* ==========================================================================
+   RESET & GLOBAL BASE
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--bg-white);
+  color: var(--ink-black);
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  line-height: 1.5;
+  overflow-x: hidden;
+  position: relative;
+  /* Very subtle sketch grid / paper speckle texture without images */
+  background-image: 
+    radial-gradient(circle, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Custom Swatter Cursor */
+body, button, a {
+  cursor: default;
+}
+a, button {
+  cursor: pointer;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Universal Typography Classes */
+h1, h2, h3, h4 {
+  font-family: var(--font-headline);
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.ink-black {
+  color: var(--ink-black);
+}
+
+.blood-red {
+  color: var(--blood-red);
+}
+
+/* ==========================================================================
+   CLICK SPLATTER CANVAS & HUD
+   ========================================================================== */
+#splatter-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Bugs Squished Floating HUD */
+#bug-kill-counter {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--bg-white);
+  border: 3px solid var(--ink-black);
+  border-radius: var(--wobble-btn);
+  box-shadow: var(--shadow-comic-sm);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1000;
+  font-family: var(--font-marker);
+  font-size: 0.95rem;
+  user-select: none;
+  transition: transform 0.15s ease;
+}
+
+#bug-kill-counter:hover {
+  transform: scale(1.05) rotate(-1deg);
+}
+
+#kill-count {
+  color: var(--blood-red);
+  font-size: 1.25rem;
+}
+
+.hud-sound-btn {
+  background: none;
+  border: 2px solid var(--ink-black);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  padding: 0;
+}
+
+/* ==========================================================================
+   HEADER & NAVIGATION
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  background: var(--bg-white);
+  border-bottom: 3px solid var(--ink-black);
+  z-index: 500;
+  padding: 0.75rem 0;
+}
+
+.nav-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family: var(--font-headline);
+  font-size: 1.85rem;
+  transform: rotate(-1deg);
+  transition: transform 0.2s ease;
+}
+
+.brand-logo:hover {
+  transform: rotate(1deg) scale(1.03);
+}
+
+.brand-pandara {
+  color: var(--ink-black);
+}
+
+.brand-kothuk {
+  color: var(--blood-red);
+}
+
+.logo-doodle {
+  overflow: visible;
+  filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.15));
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--ink-black);
+  font-family: var(--font-marker);
+  font-size: 1.05rem;
+  position: relative;
+  padding: 4px 6px;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.nav-link:hover {
+  color: var(--blood-red);
+  transform: translateY(-2px);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--blood-red);
+  transition: width 0.2s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: 2px solid var(--ink-black);
+  border-radius: 4px;
+  padding: 6px 8px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 22px;
+  height: 3px;
+  background: var(--ink-black);
+  transition: transform 0.2s;
+}
+
+/* ==========================================================================
+   COMIC SKETCH BUTTONS
+   ========================================================================== */
+.sketch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-headline);
+  font-size: 1.35rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  color: var(--ink-black);
+  background: var(--bg-white);
+  border: 3.5px solid var(--ink-black);
+  border-radius: var(--wobble-btn);
+  box-shadow: var(--shadow-comic);
+  padding: 12px 28px;
+  transition: all 0.12s ease-in-out;
+  user-select: none;
+}
+
+.sketch-btn:hover {
+  transform: translate(-3px, -3px) rotate(1deg);
+  box-shadow: 7px 7px 0px var(--ink-black);
+}
+
+.sketch-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0px var(--ink-black);
+}
+
+.sketch-btn-primary {
+  background: var(--blood-red);
+  color: var(--bg-white);
+  box-shadow: 5px 5px 0px var(--ink-black);
+}
+
+.sketch-btn-primary:hover {
+  background: var(--blood-bright);
+  box-shadow: 8px 8px 0px var(--ink-black);
+}
+
+.sketch-btn-secondary {
+  background: var(--bg-white);
+  color: var(--ink-black);
+}
+
+.sketch-btn-small {
+  font-size: 1rem;
+  padding: 8px 18px;
+  box-shadow: var(--shadow-comic-sm);
+}
+
+.sketch-btn-download {
+  font-size: 1.8rem;
+  padding: 16px 40px;
+  background: var(--blood-red);
+  color: var(--bg-white);
+  box-shadow: var(--shadow-comic-lg);
+  border-width: 4px;
+}
+
+.sketch-btn-download:hover {
+  background: var(--blood-bright);
+  transform: translate(-4px, -4px) rotate(-1deg);
+  box-shadow: 12px 12px 0px var(--ink-black);
+}
+
+/* ==========================================================================
+   HERO SECTION
+   ========================================================================== */
+.hero-section {
+  position: relative;
+  padding: 5rem 1.5rem 4rem;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 3.5px solid var(--ink-black);
+}
+
+/* Creature Simulation Zone within Hero */
+.creature-zone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* Interactive Flying/Crawling Creature Element */
+.live-bug {
+  position: absolute;
+  user-select: none;
+  cursor: crosshair;
+  z-index: 25;
+  transition: transform 0.08s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.25));
+}
+
+.live-bug.bug-mosquito {
+  font-size: 2.2rem;
+}
+.live-bug.bug-spider {
+  font-size: 2.6rem;
+}
+.live-bug.bug-fly {
+  font-size: 1.8rem;
+}
+.live-bug.bug-bat {
+  font-size: 2.8rem;
+}
+.live-bug.bug-boss {
+  font-size: 3.5rem;
+}
+.live-bug.bug-ant {
+  font-size: 1.4rem;
+}
+
+/* Buzz vibration animation */
+@keyframes buzz {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-2px, 2px) rotate(-4deg); }
+  50% { transform: translate(2px, -2px) rotate(3deg); }
+  75% { transform: translate(-1px, -1px) rotate(-2deg); }
+  100% { transform: translate(1px, 2px) rotate(2deg); }
+}
+
+.live-bug:not(.dead) {
+  animation: buzz 0.18s infinite ease-in-out;
+}
+
+.live-bug.dead {
+  animation: squish 0.6s forwards ease-out;
+  pointer-events: none;
+}
+
+@keyframes squish {
+  0% { transform: scale(1) rotate(0deg); }
+  40% { transform: scale(1.6, 0.4) rotate(45deg); opacity: 1; }
+  100% { transform: scale(0.2, 0.2) rotate(90deg); opacity: 0; }
+}
+
+/* Hero Centered Content */
+.hero-content {
+  position: relative;
+  z-index: 20;
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Malayalam Screaming Stamp */
+.stamp-malayalam {
+  display: inline-block;
+  font-family: var(--font-malayalam);
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--blood-red);
+  background: var(--bg-white);
+  border: 3px dashed var(--blood-red);
+  border-radius: var(--wobble-1);
+  padding: 4px 18px;
+  transform: rotate(-3deg);
+  margin-bottom: 1rem;
+  box-shadow: 3px 3px 0px rgba(211, 47, 47, 0.25);
+  animation: stampPulse 3s infinite ease-in-out;
+}
+
+@keyframes stampPulse {
+  0%, 100% { transform: rotate(-3deg) scale(1); }
+  50% { transform: rotate(-1deg) scale(1.04); }
+}
+
+.hero-title {
+  font-size: 4.8rem;
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.08);
+}
+
+.hero-tagline {
+  font-family: var(--font-hand);
+  font-size: 1.85rem;
+  color: var(--ink-pencil);
+  margin-bottom: 1.5rem;
+  transform: rotate(0.5deg);
+}
+
+/* Rough Sketch Box in Hero */
+.hero-card-sketch {
+  background: var(--bg-white);
+  border: 3px solid var(--ink-black);
+  border-radius: var(--wobble-1);
+  box-shadow: var(--shadow-comic);
+  padding: 1.5rem 2rem;
+  margin: 0 auto 2.25rem;
+  max-width: 650px;
+}
+
+.hero-lead {
+  font-family: var(--font-headline);
+  font-size: 1.6rem;
+  color: var(--ink-black);
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtext {
+  font-family: var(--font-hand);
+  font-size: 1.25rem;
+  color: var(--ink-pencil);
+}
+
+/* Hero Action Buttons */
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn-with-arrow {
+  position: relative;
+}
+
+.arrow-annotation {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.left-arrow {
+  top: 100%;
+  left: -20px;
+  transform: rotate(-6deg);
+  color: var(--blood-red);
+}
+
+.right-arrow {
+  top: 100%;
+  right: -20px;
+  transform: rotate(6deg);
+  color: var(--ink-black);
+}
+
+/* Badges under buttons */
+.hero-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 2.75rem;
+}
+
+.badge-pill {
+  font-family: var(--font-marker);
+  font-size: 1.05rem;
+  background: var(--bg-cream);
+  border: 2.5px solid var(--ink-black);
+  border-radius: 20px;
+  padding: 4px 14px;
+  box-shadow: 2px 2px 0px var(--ink-black);
+}
+
+/* Chaotic Handwritten Scribbles & Notes around Hero */
+.chaos-note {
+  position: absolute;
+  background: #fffbe6;
+  border: 2px solid var(--ink-black);
+  border-radius: var(--wobble-2);
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.8);
+  padding: 8px 14px;
+  font-family: var(--font-marker);
+  font-size: 0.95rem;
+  color: var(--ink-black);
+  transform: rotate(var(--rot, 0deg));
+  z-index: 15;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.note-1 { top: 12%; left: 4%; }
+.note-2 { top: 22%; right: 6%; color: var(--blood-red); }
+.note-3 { top: 48%; left: 3%; }
+.note-4 { bottom: 15%; left: 8%; }
+.note-5 { top: 14%; right: 20%; }
+.note-6 { bottom: 22%; right: 6%; }
+.note-7 { top: 62%; right: 4%; color: var(--blood-red); }
+.note-8 { bottom: 6%; right: 28%; }
+
+.malayalam-note {
+  font-family: var(--font-malayalam);
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   STATS SECTION
+   ========================================================================== */
+.stats-section {
+  padding: 2.5rem 0;
+  border-bottom: 3.5px solid var(--ink-black);
+  background: var(--bg-white);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background: var(--bg-white);
+  border: 3px solid var(--ink-black);
+  border-radius: var(--wobble-1);
+  box-shadow: var(--shadow-comic);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: scale(1.05) rotate(0deg);
+}
+
+.stat-num {
+  font-family: var(--font-headline);
+  font-size: 3.5rem;
+  color: var(--blood-red);
+  line-height: 1;
+  text-shadow: 2px 2px 0px var(--ink-black);
+}
+
+.stat-label {
+  font-family: var(--font-marker);
+  font-size: 1.2rem;
+  color: var(--ink-black);
+  margin-top: 0.35rem;
+}
+
+/* ==========================================================================
+   UNIVERSAL SECTION HEADINGS
+   ========================================================================== */
+.section {
+  padding: 5rem 0;
+  border-bottom: 3.5px solid var(--ink-black);
+}
+
+.section-heading {
+  text-align: center;
+  max-width: 750px;
+  margin: 0 auto 3.5rem;
+}
+
+.sketch-tag {
+  display: inline-block;
+  font-family: var(--font-marker);
+  font-size: 0.95rem;
+  background: var(--ink-black);
+  color: var(--bg-white);
+  padding: 3px 14px;
+  border-radius: 4px;
+  transform: rotate(-1.5deg);
+  margin-bottom: 0.75rem;
+}
+
+.tag-blood {
+  background: var(--blood-red);
+}
+
+.section-heading h2 {
+  font-size: 3.2rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.section-desc {
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  color: var(--ink-pencil);
+}
+
+/* ==========================================================================
+   CREATURES SECTION (MEET THE ANNOYANCES)
+   ========================================================================== */
+.creatures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.creature-card {
+  position: relative;
+  background: var(--bg-white);
+  border: 3.5px solid var(--ink-black);
+  border-radius: var(--wobble-1);
+  box-shadow: var(--shadow-comic);
+  padding: 2.2rem 1.25rem 1.5rem;
+  text-align: center;
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.creature-card:hover {
+  transform: translateY(-6px) rotate(0deg);
+  box-shadow: var(--shadow-comic-lg);
+}
+
+/* Tape Strip at top of card */
+.card-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 70px;
+  height: 22px;
+  background: var(--tape-color);
+  border: 1px dashed rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.card-sketch-art {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.creature-svg {
+  overflow: visible;
+  filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.1));
+}
+
+.creature-name {
+  font-family: var(--font-headline);
+  font-size: 1.7rem;
+  margin-bottom: 0.25rem;
+}
+
+.creature-pitch {
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  color: var(--ink-pencil);
+  margin-bottom: 1rem;
+}
+
+.creature-intel {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  border-top: 2px dashed var(--ink-black);
+  border-bottom: 2px dashed var(--ink-black);
+  padding: 8px 0;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.poke-btn {
+  font-family: var(--font-marker);
+  font-size: 0.95rem;
+  background: var(--bg-white);
+  border: 2.5px solid var(--ink-black);
+  border-radius: var(--wobble-btn);
+  padding: 6px 14px;
+  box-shadow: var(--shadow-comic-sm);
+  color: var(--blood-red);
+  transition: all 0.1s;
+}
+
+.poke-btn:hover {
+  background: var(--blood-red);
+  color: var(--bg-white);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--ink-black);
+}
+
+.card-boss {
+  border-color: var(--blood-red);
+  box-shadow: var(--shadow-blood);
+}
+
+.btn-danger {
+  background: var(--blood-red);
+  color: var(--bg-white);
+}
+
+/* ==========================================================================
+   WEAPONS & PROGRESSION SECTION
+   ========================================================================== */
+.weapon-progression-wrapper {
+  overflow-x: auto;
+  padding: 1.5rem 0.5rem 2rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.progression-track {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 1050px;
+  padding: 1rem 0;
+}
+
+.weapon-step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.kills-badge {
+  font-family: var(--font-marker);
+  font-size: 0.85rem;
+  background: var(--ink-black);
+  color: var(--bg-white);
+  padding: 4px 8px;
+  border-radius: 4px;
+  transform: rotate(-3deg);
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
+.badge-gold {
+  background: var(--blood-red);
+}
+
+.weapon-box {
+  background: var(--bg-white);
+  border: 3px solid var(--ink-black);
+  border-radius: var(--wobble-1);
+  box-shadow: var(--shadow-comic-sm);
+  padding: 1rem 0.75rem;
+  width: 120px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.weapon-box:hover {
+  transform: translateY(-4px) scale(1.05);
+}
+
+.highlight-box {
+  border-color: var(--blood-red);
+  box-shadow: 3px 3px 0px var(--blood-red);
+}
+
+.boss-box {
+  border-color: var(--blood-red);
+  background: #fff8f8;
+  box-shadow: 4px 4px 0px var(--blood-red);
+}
+
+.weapon-emoji {
+  font-size: 2.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.weapon-name {
+  font-family: var(--font-headline);
+  font-size: 1.05rem;
+  color: var(--ink-black);
+  line-height: 1.1;
+}
+
+.step-connector {
+  font-family: var(--font-headline);
+  font-size: 1.8rem;
+  color: var(--ink-pencil);
+  user-select: none;
+}
+
+/* ==========================================================================
+   HOW IT WORKS (3 STEPS)
+   ========================================================================== */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.step-card {
+  position: relative;
+  background: var(--bg-white);
+  border: 3.5px solid var(--ink-black);
+  border-radius: var(--wobble-2);
+  box-shadow: var(--shadow-comic);
+  padding: 3rem 1.75rem 2rem;
+  text-align: center;
+  transform: rotate(var(--rot, 0deg));
+}
+
+.step-number {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--blood-red);
+  color: var(--bg-white);
+  font-family: var(--font-headline);
+  font-size: 1.75rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--ink-black);
+  border-radius: 50%;
+  box-shadow: 2px 2px 0px var(--ink-black);
+}
+
+.step-card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.step-card p {
+  font-family: var(--font-hand);
+  font-size: 1.25rem;
+  color: var(--ink-pencil);
+  margin-bottom: 1.5rem;
+}
+
+.step-doodle {
+  border-top: 2px dashed var(--ink-black);
+  padding-top: 1rem;
+}
+
+.doodle-text {
+  font-family: var(--font-marker);
+  font-size: 1.1rem;
+  color: var(--blood-red);
+}
+
+/* ==========================================================================
+   SYSTEM-WIDE OVERLAY SECTION
+   ========================================================================== */
+.overlay-flex {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.always-box {
+  background: #fff9f9;
+  border: 3px solid var(--blood-red);
+  border-radius: var(--wobble-1);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: var(--shadow-blood);
+}
+
+.always-box strong {
+  font-family: var(--font-headline);
+  font-size: 1.6rem;
+  color: var(--blood-red);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.always-list {
+  list-style: none;
+}
+
+.always-list li {
+  font-family: var(--font-marker);
+  font-size: 1.25rem;
+  margin-bottom: 0.4rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed rgba(211, 47, 47, 0.25);
+  padding-bottom: 4px;
+}
+
+.overlay-caption {
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  color: var(--ink-pencil);
+}
+
+/* Hand-Drawn Desktop Window Mockup */
+.desktop-mockup {
+  background: var(--bg-white);
+  border: 3.5px solid var(--ink-black);
+  border-radius: 8px;
+  box-shadow: var(--shadow-comic-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.mockup-header {
+  background: #f0f0f0;
+  border-bottom: 3px solid var(--ink-black);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.win-btn {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ink-black);
+  border-radius: 50%;
+  display: inline-block;
+}
+.win-btn:nth-child(1) { background: #ff5f56; }
+.win-btn:nth-child(2) { background: #ffbd2e; }
+.win-btn:nth-child(3) { background: #27c93f; }
+
+.mockup-title {
+  font-family: var(--font-marker);
+  font-size: 0.85rem;
+  color: var(--ink-pencil);
+  margin-left: 8px;
+}
+
+.mockup-screen {
+  background: #fbfbfb;
+  min-height: 340px;
+  padding: 1.25rem;
+  position: relative;
+}
+
+.mock-window {
+  background: var(--bg-white);
+  border: 2.5px solid var(--ink-black);
+  box-shadow: 3px 3px 0px rgba(0,0,0,0.15);
+  margin-bottom: 1rem;
+}
+
+.mini-header {
+  background: #f4f4f4;
+  border-bottom: 2px solid var(--ink-black);
+  font-family: var(--font-marker);
+  font-size: 0.8rem;
+  padding: 4px 8px;
+}
+
+.win-vscode {
+  width: 85%;
+}
+
+.code-preview {
+  padding: 10px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.win-browser {
+  width: 75%;
+  margin-left: auto;
+  margin-top: -15px;
+}
+
+.video-placeholder {
+  padding: 20px;
+  text-align: center;
+  font-family: var(--font-marker);
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Mosquito crawling OVER all windows */
+.mock-pest {
+  position: absolute;
+  z-index: 50;
+  user-select: none;
+  pointer-events: none;
+}
+
+.pest-mosquito {
+  top: 35%;
+  left: 48%;
+  animation: buzz 0.15s infinite;
+}
+
+.pest-speech {
+  position: absolute;
+  top: -24px;
+  left: 36px;
+  background: #fff;
+  border: 2px solid var(--blood-red);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-family: var(--font-headline);
+  font-size: 0.8rem;
+  color: var(--blood-red);
+  white-space: nowrap;
+}
+
+.pest-spider {
+  bottom: 20px;
+  right: 25px;
+  font-size: 2.4rem;
+  animation: spiderWiggle 2s infinite ease-in-out;
+}
+
+@keyframes spiderWiggle {
+  0%, 100% { transform: translate(0,0) rotate(0deg); }
+  50% { transform: translate(-5px, -3px) rotate(8deg); }
+}
+
+/* ==========================================================================
+   BLOOD & CHAOS SECTION
+   ========================================================================== */
+.blood-section {
+  background: #fffafa;
+}
+
+.blood-splatters-demo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.splatter-card {
+  background: var(--bg-white);
+  border: 3.5px solid var(--ink-black);
+  border-radius: var(--wobble-1);
+  box-shadow: var(--shadow-comic);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transform: rotate(var(--rot, 0deg));
+}
+
+.splatter-visual {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.splatter-card h4 {
+  font-size: 1.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.splatter-level {
+  font-family: var(--font-marker);
+  font-size: 1.15rem;
+  color: var(--blood-red);
+}
+
+.card-disaster {
+  border-color: var(--blood-red);
+  box-shadow: var(--shadow-blood);
+}
+
+.text-disaster {
+  color: var(--blood-dark);
+  font-weight: bold;
+}
+
+.wiper-note-box {
+  background: var(--bg-white);
+  border: 3px dashed var(--ink-black);
+  border-radius: var(--wobble-2);
+  padding: 1.25rem 2rem;
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto;
+  font-family: var(--font-hand);
+  font-size: 1.25rem;
+}
+
+/* ==========================================================================
+   ORIGIN STORY NOTEBOOK
+   ========================================================================== */
+.notebook-sheet {
+  position: relative;
+  background: var(--bg-white);
+  border: 3.5px solid var(--ink-black);
+  border-radius: 4px;
+  box-shadow: var(--shadow-comic-lg);
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 3rem 3rem 2.5rem 5rem;
+  /* Lined notebook paper background */
+  background-image: 
+    repeating-linear-gradient(transparent, transparent 31px, #e8e8e8 31px, #e8e8e8 32px);
+  background-size: 100% 32px;
+  line-height: 32px;
+}
+
+/* Red Margin Line on Notebook */
+.notebook-sheet::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 60px;
+  width: 2px;
+  background: rgba(211, 47, 47, 0.4);
+}
+
+/* Hole punches on notebook side */
+.notebook-holes {
+  position: absolute;
+  top: 40px;
+  bottom: 40px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.notebook-holes span {
+  width: 18px;
+  height: 18px;
+  background: #f0f0f0;
+  border: 2px solid var(--ink-black);
+  border-radius: 50%;
+  display: block;
+}
+
+.story-date {
+  font-family: var(--font-marker);
+  font-size: 1rem;
+  color: var(--ink-gray);
+  margin-bottom: 1rem;
+}
+
+.notebook-content p {
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  color: var(--ink-black);
+  margin-bottom: 1.5rem;
+}
+
+.story-scream {
+  font-family: var(--font-malayalam);
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.scream-highlight {
+  display: inline-block;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: var(--blood-red);
+  background: #fff0f0;
+  border: 2px dashed var(--blood-red);
+  padding: 2px 16px;
+  border-radius: var(--wobble-1);
+  transform: rotate(-1.5deg);
+}
+
+.story-quote {
+  border-left: 4px solid var(--ink-black);
+  padding-left: 1rem;
+  font-family: var(--font-marker);
+  font-size: 1.3rem;
+  color: var(--blood-red);
+  margin: 1.5rem 0;
+}
+
+.notebook-author-sig {
+  text-align: right;
+  font-family: var(--font-marker);
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+
+/* ==========================================================================
+   DOWNLOAD / CTA SECTION
+   ========================================================================== */
+.download-section {
+  padding: 6rem 0;
+  background: var(--bg-white);
+}
+
+.download-card {
+  position: relative;
+  background: #fffefe;
+  border: 4px solid var(--ink-black);
+  border-radius: var(--wobble-1);
+  box-shadow: var(--shadow-comic-lg);
+  padding: 4.5rem 2rem 3.5rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+/* Stray bugs in download area */
+.download-creature {
+  position: absolute;
+  font-size: 2.4rem;
+  user-select: none;
+  animation: buzz 0.2s infinite ease-in-out;
+}
+.dc-1 { top: -20px; left: 15%; }
+.dc-2 { top: 20px; right: 8%; }
+.dc-3 { bottom: 15px; left: 10%; }
+.dc-4 { bottom: -20px; right: 20%; }
+
+.tag-ready {
+  background: var(--blood-red);
+  font-size: 1.1rem;
+  padding: 4px 18px;
+  margin-bottom: 1rem;
+}
+
+.download-title {
+  font-size: 4rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.download-sub {
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
+  color: var(--ink-pencil);
+  margin-bottom: 2.5rem;
+}
+
+.download-btn-wrap {
+  margin-bottom: 1.5rem;
+}
+
+.download-meta {
+  margin-top: 1rem;
+  font-family: var(--font-marker);
+  font-size: 0.95rem;
+  color: var(--ink-gray);
+}
+
+.download-source-link {
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+}
+
+.download-source-link a {
+  color: var(--blood-red);
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.site-footer {
+  background: #fafafa;
+  border-top: 3.5px solid var(--ink-black);
+  padding: 4rem 0 2rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-logo {
+  font-family: var(--font-headline);
+  font-size: 2.2rem;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+}
+
+.footer-desc {
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  color: var(--ink-pencil);
+  margin-bottom: 0.75rem;
+}
+
+.footer-malayalam {
+  font-family: var(--font-malayalam);
+  font-size: 1.5rem;
+  color: var(--blood-red);
+  font-weight: bold;
+}
+
+.footer-nav h4, .footer-links h4 {
+  font-family: var(--font-headline);
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--ink-black);
+  display: inline-block;
+}
+
+.footer-nav ul, .footer-links ul {
+  list-style: none;
+}
+
+.footer-nav li, .footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-nav a, .footer-links a {
+  color: var(--ink-black);
+  text-decoration: none;
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  transition: color 0.15s;
+}
+
+.footer-nav a:hover, .footer-links a:hover {
+  color: var(--blood-red);
+}
+
+.footer-bottom {
+  border-top: 2px dashed var(--ink-black);
+  padding-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  color: var(--ink-pencil);
+}
+
+/* ==========================================================================
+   TRAILER MODAL
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  padding: 1.5rem;
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-dialog {
+  position: relative;
+  background: var(--bg-white);
+  border: 4px solid var(--ink-black);
+  border-radius: var(--wobble-1);
+  box-shadow: 10px 10px 0px #000;
+  max-width: 700px;
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  width: 40px;
+  height: 40px;
+  background: var(--blood-red);
+  color: #fff;
+  border: 3px solid var(--ink-black);
+  border-radius: 50%;
+  font-family: var(--font-headline);
+  font-size: 1.6rem;
+  line-height: 1;
+  box-shadow: 2px 2px 0px #000;
+  cursor: pointer;
+}
+
+.modal-header h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+}
+
+.trailer-screen {
+  background: #111;
+  border: 3px solid var(--ink-black);
+  border-radius: 4px;
+  padding: 1rem;
+  color: #fff;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.trailer-hud {
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #00ff00;
+  margin-bottom: 1rem;
+}
+
+.interactive-sandbox {
+  flex: 1;
+  border: 2px dashed #444;
+  position: relative;
+  overflow: hidden;
+  cursor: crosshair;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sandbox-instruction {
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  color: #bbb;
+  pointer-events: none;
+}
+
+.modal-footer {
+  margin-top: 1.5rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES (Mobile & Tablet)
+   ========================================================================== */
+@media (max-width: 992px) {
+  .hero-title {
+    font-size: 3.8rem;
+  }
+  .overlay-flex {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+  .blood-splatters-demo {
+    grid-template-columns: 1fr;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+  }
+  .nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--bg-white);
+    border-bottom: 3.5px solid var(--ink-black);
+    flex-direction: column;
+    padding: 1.5rem;
+    display: none;
+    box-shadow: 0 8px 0px rgba(0,0,0,0.1);
+  }
+  .nav-menu.active {
+    display: flex;
+  }
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+  .hero-title {
+    font-size: 3rem;
+  }
+  .hero-tagline {
+    font-size: 1.4rem;
+  }
+  .notebook-sheet {
+    padding: 2.5rem 1.5rem 2rem 2.5rem;
+  }
+  .notebook-sheet::before {
+    left: 20px;
+  }
+  .notebook-holes {
+    display: none;
+  }
+  .chaos-note {
+    display: none; /* Hide cluttered background sticky notes on small screens */
+  }
+  .note-1, .note-2 {
+    display: flex; /* Keep just two for comic punch */
+    font-size: 0.8rem;
+  }
+  .download-title {
+    font-size: 2.6rem;
+  }
+  .sketch-btn-download {
+    font-size: 1.3rem;
+    padding: 14px 24px;
+  }
+}

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PANDARA KOTHUK 🦟 - The Annoying Desktop Mosquito Game</title>
+  <meta name="description"
+    content="A ridiculous, hand-drawn desktop overlay game where mosquitoes crawl over your Chrome, Discord, and VS Code. Swat them, splatter blood, and unlock weapons!">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦟</text></svg>">
+
+  <!-- Comic / Hand-drawn Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Bangers&family=Caveat:wght@700&family=Permanent+Marker&family=Patrick+Hand&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Blood Canvas Overlay for Click Squishes -->
+  <canvas id="splatter-canvas" aria-hidden="true"></canvas>
+
+  <!-- Interactive Kill Tracker HUD -->
+  <div id="bug-kill-counter" title="Click creatures to swat them!">
+    <span class="hud-icon">🩸</span>
+    <span class="hud-text">SQUISHED ON PAGE: <strong id="kill-count">0</strong></span>
+    <button id="sound-toggle" class="hud-sound-btn" aria-label="Toggle Sound Effects" title="Toggle audio">🔊</button>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="#hero" class="brand-logo" aria-label="Pandara Kothuk Home">
+        <span class="brand-pandara">PANDARA</span>
+        <span class="brand-kothuk">KOTHUK</span>
+        <svg class="logo-doodle" viewBox="0 0 60 40" width="48" height="32" aria-hidden="true">
+          <!-- Hand-drawn mosquito doodle -->
+          <ellipse cx="28" cy="20" rx="9" ry="5" fill="#111" />
+          <circle cx="16" cy="18" r="4" fill="#d32f2f" />
+          <line x1="12" y1="18" x2="4" y2="17" stroke="#111" stroke-width="2" stroke-linecap="round" />
+          <path d="M 24 16 Q 20 4 32 6 Q 36 12 28 16" fill="none" stroke="#111" stroke-width="1.8" />
+          <path d="M 28 16 Q 32 2 42 6 Q 38 14 30 17" fill="none" stroke="#111" stroke-width="1.8" />
+          <line x1="22" y1="23" x2="16" y2="34" stroke="#111" stroke-width="1.8" stroke-linecap="round" />
+          <line x1="28" y1="24" x2="28" y2="36" stroke="#111" stroke-width="1.8" stroke-linecap="round" />
+          <line x1="33" y1="23" x2="40" y2="34" stroke="#111" stroke-width="1.8" stroke-linecap="round" />
+          <!-- Comic buzzing sound arcs -->
+          <path d="M 44 14 Q 48 10 52 16" fill="none" stroke="#d32f2f" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M 47 11 Q 52 7 57 13" fill="none" stroke="#d32f2f" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </a>
+
+      <button class="hamburger-btn" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav-menu" id="nav-menu">
+        <ul class="nav-links">
+          <li><a href="#hero" class="nav-link">Home</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+          <li><a href="#creatures" class="nav-link">Creatures</a></li>
+          <li><a href="#weapons" class="nav-link">Weapons</a></li>
+          <li><a href="#story" class="nav-link">Origin Story</a></li>
+        </ul>
+        <div class="nav-cta">
+          <a href="#download" class="sketch-btn sketch-btn-small">DOWNLOAD FOR WINDOWS</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section id="hero" class="hero-section">
+      <!-- Active crawling/flying bugs spawn here -->
+      <div id="hero-creature-zone" class="creature-zone" aria-hidden="true"></div>
+
+      <!-- Chaotic sticky notes & doodles around hero -->
+      <div class="chaos-note note-1" style="--rot: -4deg;">
+        <span>WHY IS IT STILL HERE?!</span>
+        <svg class="scribble-arrow" viewBox="0 0 60 40" width="40" height="26">
+          <path d="M 5 35 Q 25 5 50 15 M 50 15 L 40 10 M 50 15 L 45 24" fill="none" stroke="#111" stroke-width="2.2"
+            stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <div class="chaos-note note-2" style="--rot: 5deg;">
+        <span>GET IT! 💥</span>
+      </div>
+
+      <div class="chaos-note note-3" style="--rot: -7deg;">
+        <span>BRUH. 🩴</span>
+      </div>
+
+      <div class="chaos-note note-4" style="--rot: 3deg;">
+        <span>COME BACK HERE!</span>
+        <svg class="scribble-arrow" viewBox="0 0 50 30" width="36" height="22">
+          <path d="M 45 5 Q 25 25 5 15 M 5 15 L 14 10 M 5 15 L 12 24" fill="none" stroke="#d32f2f" stroke-width="2"
+            stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <div class="chaos-note note-5" style="--rot: -3deg;">
+        <span>MISS! 😭</span>
+      </div>
+
+      <div class="chaos-note note-6" style="--rot: 6deg;">
+        <span>WHY ARE THERE SO MANY?!</span>
+      </div>
+
+      <div class="chaos-note note-7" style="--rot: -5deg;">
+        <span class="malayalam-note">പിടിക്കെടാ! 🩸</span>
+      </div>
+
+      <div class="chaos-note note-8" style="--rot: 4deg;">
+        <span>NOT AGAIN. 🦟</span>
+      </div>
+
+      <div class="hero-content">
+        <!-- Malayalam handwritten scream stamp -->
+        <div class="stamp-malayalam" aria-label="Malayalam tagline">
+          <span>“പണ്ടാരം പിടിച്ച കൊതുക്!” 😭</span>
+        </div>
+
+        <h1 class="hero-title">
+          <span class="ink-black">PANDARA</span>
+          <span class="blood-red">KOTHUK</span>
+        </h1>
+
+        <h2 class="hero-tagline">"A small annoyance for a bigger smile."</h2>
+
+        <div class="hero-card-sketch">
+          <p class="hero-lead">
+            <strong>Mosquitoes. Spiders. Chaos.</strong><br>
+            Right on your Windows screen.
+          </p>
+          <p class="hero-subtext">
+            Kill them. Unlock ridiculous weapons.<br>
+            And enjoy the most uselessly fun desktop game ever.
+          </p>
+        </div>
+
+        <div class="hero-actions">
+          <div class="btn-with-arrow">
+            <a href="#download" class="sketch-btn sketch-btn-primary">
+              <span class="btn-icon">🪰</span> KILL SOME BUGS
+            </a>
+            <div class="arrow-annotation left-arrow">
+              <svg viewBox="0 0 70 50" width="50" height="35">
+                <path d="M 60 5 Q 30 5 15 35 M 15 35 L 28 32 M 15 35 L 18 20" fill="none" stroke="#d32f2f"
+                  stroke-width="2.5" stroke-linecap="round" />
+              </svg>
+              <span class="arrow-caption">Free download!</span>
+            </div>
+          </div>
+
+          <div class="btn-with-arrow">
+            <button id="trailer-btn" class="sketch-btn sketch-btn-secondary" type="button">
+              <span class="btn-icon">▶</span> WATCH TRAILER
+            </button>
+            <div class="arrow-annotation right-arrow">
+              <svg viewBox="0 0 70 50" width="50" height="35">
+                <path d="M 10 5 Q 40 5 55 35 M 55 35 L 42 32 M 55 35 L 52 20" fill="none" stroke="#111"
+                  stroke-width="2.5" stroke-linecap="round" />
+              </svg>
+              <span class="arrow-caption">See the chaos!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-badges">
+          <span class="badge-pill">✓ Free</span>
+          <span class="badge-pill">✓ Windows Only</span>
+          <span class="badge-pill">✓ No Ads</span>
+          <span class="badge-pill">✓ 100% Useless</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS COUNTER -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card" style="--rot: -2deg;">
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Stupid Weapons</div>
+          </div>
+          <div class="stat-card" style="--rot: 1deg;">
+            <div class="stat-num">20+</div>
+            <div class="stat-label">Creatures & Bosses</div>
+          </div>
+          <div class="stat-card" style="--rot: -1.5deg;">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Pure Annoyance</div>
+          </div>
+          <div class="stat-card" style="--rot: 2deg;">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Useless Fun</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEET THE CREATURES -->
+    <section id="creatures" class="section creatures-section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="sketch-tag">Target List</span>
+          <h2>MEET THE ANNOYANCES</h2>
+          <p class="section-desc">Click any creature to test your swatting reflex!</p>
+        </div>
+
+        <div class="creatures-grid">
+          <!-- Mosquito -->
+          <div class="creature-card" data-creature="mosquito" style="--rot: -1.5deg;">
+            <div class="card-tape"></div>
+            <div class="card-sketch-art">
+              <svg viewBox="0 0 120 120" width="90" height="90" class="creature-svg">
+                <!-- Body -->
+                <ellipse cx="60" cy="65" rx="14" ry="8" fill="#111" transform="rotate(-15 60 65)" />
+                <!-- Head -->
+                <circle cx="42" cy="60" r="7" fill="#d32f2f" />
+                <!-- Needle Proboscis -->
+                <line x1="36" y1="62" x2="16" y2="66" stroke="#111" stroke-width="3" stroke-linecap="round" />
+                <!-- Wings -->
+                <path d="M 58 58 Q 50 20 72 26 Q 78 44 64 58" fill="rgba(0,0,0,0.08)" stroke="#111"
+                  stroke-width="2.5" />
+                <path d="M 64 60 Q 68 18 90 28 Q 86 48 70 60" fill="rgba(0,0,0,0.08)" stroke="#111"
+                  stroke-width="2.5" />
+                <!-- Legs -->
+                <path d="M 52 70 L 40 92 L 32 96" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
+                <path d="M 60 72 L 60 96 L 64 102" fill="none" stroke="#111" stroke-width="2.5"
+                  stroke-linecap="round" />
+                <path d="M 68 70 L 80 94 L 92 98" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
+                <!-- Eyes -->
+                <circle cx="41" cy="58" r="2" fill="#fff" />
+              </svg>
+            </div>
+            <h3 class="creature-name">🦟 Mosquito</h3>
+            <p class="creature-pitch">The original menace.</p>
+            <div class="creature-intel">
+              <span>Speed: ⚡⚡⚡</span>
+              <span>Annoyance: 10/10</span>
+            </div>
+            <button class="poke-btn" type="button">SMACK IT! 🩸</button>
+          </div>
+
+          <!-- Spider -->
+          <div class="creature-card" data-creature="spider" style="--rot: 2deg;">
+            <div class="card-tape"></div>
+            <div class="card-sketch-art">
+              <svg viewBox="0 0 120 120" width="90" height="90" class="creature-svg">
+                <!-- Abdomen -->
+                <ellipse cx="60" cy="55" rx="16" ry="18" fill="#111" />
+                <circle cx="60" cy="78" r="11" fill="#111" />
+                <!-- Red hourglass -->
+                <polygon points="56,48 64,48 58,55 64,62 56,62 62,55" fill="#d32f2f" />
+                <!-- 8 Legs -->
+                <path d="M 50 72 Q 25 60 18 45" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" />
+                <path d="M 50 76 Q 20 75 14 70" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" />
+                <path d="M 50 80 Q 22 92 18 105" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" />
+                <path d="M 52 84 Q 30 108 26 115" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" />
+                <path d="M 70 72 Q 95 60 102 45" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" />
+                <path d="M 70 76 Q 100 75 106 70" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" />
+                <path d="M 70 80 Q 98 92 102 105" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" />
+                <path d="M 68 84 Q 90 108 94 115" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" />
+                <!-- Eyes -->
+                <circle cx="56" cy="84" r="1.5" fill="#d32f2f" />
+                <circle cx="64" cy="84" r="1.5" fill="#d32f2f" />
+              </svg>
+            </div>
+            <h3 class="creature-name">🕷️ Spider</h3>
+            <p class="creature-pitch">Bigger. Faster. More blood.</p>
+            <div class="creature-intel">
+              <span>Legs: 8 creepy ones</span>
+              <span>Splatter: BIG</span>
+            </div>
+            <button class="poke-btn" type="button">SMACK IT! 🩸</button>
+          </div>
+
+          <!-- Fly -->
+          <div class="creature-card" data-creature="fly" style="--rot: -2deg;">
+            <div class="card-tape"></div>
+            <div class="card-sketch-art">
+              <svg viewBox="0 0 120 120" width="90" height="90" class="creature-svg">
+                <!-- Round body -->
+                <ellipse cx="60" cy="65" rx="16" ry="20" fill="#111" />
+                <circle cx="53" cy="46" r="8" fill="#d32f2f" />
+                <circle cx="67" cy="46" r="8" fill="#d32f2f" />
+                <!-- Huge wings -->
+                <ellipse cx="44" cy="50" rx="22" ry="12" fill="none" stroke="#111" stroke-width="2.5"
+                  transform="rotate(-35 44 50)" />
+                <ellipse cx="76" cy="50" rx="22" ry="12" fill="none" stroke="#111" stroke-width="2.5"
+                  transform="rotate(35 76 50)" />
+                <!-- Legs -->
+                <line x1="46" y1="70" x2="28" y2="85" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
+                <line x1="74" y1="70" x2="92" y2="85" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
+                <line x1="50" y1="80" x2="36" y2="102" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
+                <line x1="70" y1="80" x2="84" y2="102" stroke="#111" stroke-width="2.5" stroke-linecap="round" />
+              </svg>
+            </div>
+            <h3 class="creature-name">🪰 Fly</h3>
+            <p class="creature-pitch">Small. Fast. Extremely annoying.</p>
+            <div class="creature-intel">
+              <span>Evasion: 99%</span>
+              <span>Buzz: Irritating</span>
+            </div>
+            <button class="poke-btn" type="button">SMACK IT! 🩸</button>
+          </div>
+
+          <!-- Bat -->
+          <div class="creature-card" data-creature="bat" style="--rot: 1.5deg;">
+            <div class="card-tape"></div>
+            <div class="card-sketch-art">
+              <svg viewBox="0 0 120 120" width="90" height="90" class="creature-svg">
+                <!-- Bat body & ears -->
+                <ellipse cx="60" cy="65" rx="10" ry="16" fill="#111" />
+                <polygon points="54,50 51,36 58,45" fill="#111" />
+                <polygon points="66,50 69,36 62,45" fill="#111" />
+                <!-- Wings -->
+                <path d="M 54 60 C 35 30 10 40 5 60 C 15 65 25 60 32 72 C 40 76 48 70 54 68 Z" fill="#111" />
+                <path d="M 66 60 C 85 30 110 40 115 60 C 105 65 95 60 88 72 C 80 76 72 70 66 68 Z" fill="#111" />
+                <!-- Red Eyes -->
+                <circle cx="57" cy="54" r="1.5" fill="#d32f2f" />
+                <circle cx="63" cy="54" r="1.5" fill="#d32f2f" />
+              </svg>
+            </div>
+            <h3 class="creature-name">🦇 Bat</h3>
+            <p class="creature-pitch">It flies around and makes everything worse.</p>
+            <div class="creature-intel">
+              <span>Flight: Gliding</span>
+              <span>Nightmare: Yes</span>
+            </div>
+            <button class="poke-btn" type="button">SMACK IT! 🩸</button>
+          </div>
+
+          <!-- Boss -->
+          <div class="creature-card card-boss" data-creature="boss" style="--rot: -2.5deg;">
+            <div class="card-tape"></div>
+            <div class="card-sketch-art">
+              <svg viewBox="0 0 120 120" width="90" height="90" class="creature-svg">
+                <!-- Crown -->
+                <polygon points="45,35 50,22 60,30 70,22 75,35" fill="#d32f2f" stroke="#111" stroke-width="2" />
+                <!-- Giant monster skull/head -->
+                <circle cx="60" cy="65" r="28" fill="#111" />
+                <!-- Sharp Teeth -->
+                <polygon points="44,72 48,82 52,72 56,84 60,72 64,84 68,72 72,82 76,72" fill="#fff" />
+                <!-- Glowing Multi Eyes -->
+                <circle cx="48" cy="55" r="4" fill="#d32f2f" />
+                <circle cx="72" cy="55" r="4" fill="#d32f2f" />
+                <circle cx="60" cy="48" r="3" fill="#d32f2f" />
+                <!-- Horns / spikes -->
+                <path d="M 36 50 Q 20 30 18 45" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round" />
+                <path d="M 84 50 Q 100 30 102 45" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round" />
+              </svg>
+            </div>
+            <h3 class="creature-name">👑 Boss Creature</h3>
+            <p class="creature-pitch">You probably shouldn't have reached this level.</p>
+            <div class="creature-intel">
+              <span>HP: Absurd</span>
+              <span>Danger: Maximum</span>
+            </div>
+            <button class="poke-btn btn-danger" type="button">ATTACK! 💀</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WEAPONS / PROGRESSION SECTION -->
+    <section id="weapons" class="section weapons-section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="sketch-tag">Progression Chart</span>
+          <h2>KILL. LEVEL UP. GET STUPID WEAPONS.</h2>
+          <p class="section-desc">No microtransactions. No XP grind. Weapons unlock strictly from cold-blooded mosquito
+            kills.</p>
+        </div>
+
+        <div class="weapon-progression-wrapper">
+          <div class="progression-track">
+            <!-- Weapon 1 -->
+            <div class="weapon-step">
+              <div class="kills-badge">0 KILLS</div>
+              <div class="weapon-box">
+                <div class="weapon-emoji">👋</div>
+                <div class="weapon-name">Hand</div>
+              </div>
+              <div class="step-connector">➔</div>
+            </div>
+
+            <!-- Weapon 2 -->
+            <div class="weapon-step">
+              <div class="kills-badge">5 KILLS</div>
+              <div class="weapon-box">
+                <div class="weapon-emoji">🪰</div>
+                <div class="weapon-name">Fly Swatter</div>
+              </div>
+              <div class="step-connector">➔</div>
+            </div>
+
+            <!-- Weapon 3 -->
+            <div class="weapon-step">
+              <div class="kills-badge">10 KILLS</div>
+              <div class="weapon-box">
+                <div class="weapon-emoji">📰</div>
+                <div class="weapon-name">Newspaper</div>
+              </div>
+              <div class="step-connector">➔</div>
+            </div>
+
+            <!-- Weapon 4 -->
+            <div class="weapon-step">
+              <div class="kills-badge">15 KILLS</div>
+              <div class="weapon-box highlight-box">
+                <div class="weapon-emoji">🩴</div>
+                <div class="weapon-name">Slipper (Chappal)</div>
+              </div>
+              <div class="step-connector">➔</div>
+            </div>
+
+            <!-- Weapon 5 -->
+            <div class="weapon-step">
+              <div class="kills-badge">25 KILLS</div>
+              <div class="weapon-box">
+                <div class="weapon-emoji">🏏</div>
+                <div class="weapon-name">Bat</div>
+              </div>
+              <div class="step-connector">➔</div>
+            </div>
+
+            <!-- Weapon 6 -->
+            <div class="weapon-step">
+              <div class="kills-badge">40 KILLS</div>
+              <div class="weapon-box">
+                <div class="weapon-emoji">🔨</div>
+                <div class="weapon-name">Hammer</div>
+              </div>
+              <div class="step-connector">➔</div>
+            </div>
+
+            <!-- Weapon 7 -->
+            <div class="weapon-step">
+              <div class="kills-badge">60 KILLS</div>
+              <div class="weapon-box">
+                <div class="weapon-emoji">🌀</div>
+                <div class="weapon-name">Vacuum</div>
+              </div>
+              <div class="step-connector">➔</div>
+            </div>
+
+            <!-- Weapon 8 -->
+            <div class="weapon-step">
+              <div class="kills-badge">100 KILLS</div>
+              <div class="weapon-box">
+                <div class="weapon-emoji">⚡</div>
+                <div class="weapon-name">Electric Swatter</div>
+              </div>
+              <div class="step-connector">➔</div>
+            </div>
+
+            <!-- Weapon 9 -->
+            <div class="weapon-step">
+              <div class="kills-badge">150 KILLS</div>
+              <div class="weapon-box highlight-box">
+                <div class="weapon-emoji">🩴💥</div>
+                <div class="weapon-name">Giant Slipper</div>
+              </div>
+              <div class="step-connector">➔</div>
+            </div>
+
+            <!-- Weapon 10 -->
+            <div class="weapon-step">
+              <div class="kills-badge badge-gold">250 KILLS</div>
+              <div class="weapon-box boss-box">
+                <div class="weapon-emoji">👑</div>
+                <div class="weapon-name">Boss Mode</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="section how-section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="sketch-tag">3-Step Protocol</span>
+          <h2>HOW IT WORKS</h2>
+        </div>
+
+        <div class="steps-grid">
+          <!-- Step 1 -->
+          <div class="step-card" style="--rot: -1deg;">
+            <div class="step-number">01</div>
+            <h3>OPEN ANYTHING</h3>
+            <p>Chrome. YouTube. Discord. VS Code. Anything on your PC.</p>
+            <div class="step-doodle">
+              <span class="doodle-text">💻 Browsing peacefully...</span>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card" style="--rot: 1.5deg;">
+            <div class="step-number">02</div>
+            <h3>THE KOTHUK APPEARS</h3>
+            <p>It crawls onto your screen and starts annoying you relentlessly.</p>
+            <div class="step-doodle">
+              <span class="doodle-text">🦟 *BZZZZZZZT*</span>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card" style="--rot: -2deg;">
+            <div class="step-number">03</div>
+            <h3>KILL IT</h3>
+            <p>Click, smash, slap, vacuum, or use whatever ridiculous weapon you've unlocked.</p>
+            <div class="step-doodle">
+              <span class="doodle-text">🩸 *SPLAT!*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SYSTEM-WIDE OVERLAY -->
+    <section id="features" class="section overlay-section">
+      <div class="container">
+        <div class="overlay-flex">
+          <div class="overlay-text">
+            <span class="sketch-tag">Desktop Integration</span>
+            <h2>IT DOESN'T CARE WHAT YOU'RE DOING.</h2>
+            <div class="always-box">
+              <strong>Always on top.</strong>
+              <ul class="always-list">
+                <li><span>Chrome?</span> <strong>Mosquito.</strong></li>
+                <li><span>YouTube?</span> <strong>Mosquito.</strong></li>
+                <li><span>Coding?</span> <strong>Definitely mosquito.</strong></li>
+              </ul>
+            </div>
+            <p class="overlay-caption">
+              Built using transparent Win32 desktop overlays. It stays above all your software, floating across windows
+              with organic erratic physics.
+            </p>
+          </div>
+
+          <!-- Mock Hand-Drawn Desktop Window -->
+          <div class="desktop-mockup">
+            <div class="mockup-header">
+              <span class="win-btn"></span>
+              <span class="win-btn"></span>
+              <span class="win-btn"></span>
+              <span class="mockup-title">Windows Desktop (Full Screen Overlay)</span>
+            </div>
+            <div class="mockup-screen">
+              <!-- Window 1: VS Code -->
+              <div class="mock-window win-vscode">
+                <div class="mini-header">📄 Program.cs - VS Code</div>
+                <pre class="code-preview"><code>while(true) {
+  Console.WriteLine("Coding...");
+  // <span class="blood-red">WHAT IS ON MY SCREEN?!</span>
+}</code></pre>
+              </div>
+
+              <!-- Window 2: YouTube -->
+              <div class="mock-window win-browser">
+                <div class="mini-header">🌐 Chrome - YouTube: Lofi Chill Beats</div>
+                <div class="video-placeholder">▶ [Chill Music Playing]</div>
+              </div>
+
+              <!-- Crawling Mosquito on top of everything! -->
+              <div class="mock-pest pest-mosquito" title="Always on top!">
+                <svg viewBox="0 0 50 50" width="44" height="44">
+                  <ellipse cx="25" cy="25" rx="8" ry="4" fill="#111" />
+                  <circle cx="15" cy="25" r="3.5" fill="#d32f2f" />
+                  <line x1="12" y1="25" x2="3" y2="25" stroke="#111" stroke-width="2" />
+                  <ellipse cx="28" cy="18" rx="8" ry="4" fill="none" stroke="#111" stroke-width="1.5"
+                    transform="rotate(-30 28 18)" />
+                  <ellipse cx="28" cy="32" rx="8" ry="4" fill="none" stroke="#111" stroke-width="1.5"
+                    transform="rotate(30 28 32)" />
+                </svg>
+                <div class="pest-speech">BZZZZT! 🦟</div>
+              </div>
+
+              <!-- Crawling Spider near the corner -->
+              <div class="mock-pest pest-spider">
+                🕷️
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOOD & CHAOS SECTION -->
+    <section class="section blood-section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="sketch-tag tag-blood">Carnage Mode</span>
+          <h2 class="blood-title">YES. THERE IS BLOOD.</h2>
+          <p class="section-desc">Because apparently killing a digital mosquito wasn't satisfying enough.</p>
+        </div>
+
+        <div class="blood-splatters-demo">
+          <div class="splatter-card" style="--rot: -2deg;">
+            <div class="splatter-visual visual-small">
+              <svg viewBox="0 0 100 100" width="70" height="70">
+                <circle cx="50" cy="50" r="14" fill="#d32f2f" />
+                <circle cx="68" cy="42" r="5" fill="#d32f2f" />
+                <circle cx="34" cy="62" r="4" fill="#d32f2f" />
+                <circle cx="48" cy="74" r="3" fill="#d32f2f" />
+              </svg>
+            </div>
+            <h4>Mosquito</h4>
+            <span class="splatter-level">➔ Small Splatter</span>
+          </div>
+
+          <div class="splatter-card" style="--rot: 2deg;">
+            <div class="splatter-visual visual-medium">
+              <svg viewBox="0 0 140 140" width="100" height="100">
+                <ellipse cx="70" cy="70" rx="30" ry="24" fill="#d32f2f" />
+                <circle cx="108" cy="52" r="8" fill="#d32f2f" />
+                <circle cx="32" cy="85" r="7" fill="#d32f2f" />
+                <circle cx="70" cy="112" r="6" fill="#d32f2f" />
+                <circle cx="102" cy="98" r="5" fill="#d32f2f" />
+                <path d="M 60 88 Q 58 120 54 130" stroke="#d32f2f" stroke-width="4" fill="none"
+                  stroke-linecap="round" />
+              </svg>
+            </div>
+            <h4>Spider</h4>
+            <span class="splatter-level">➔ BIG SPLATTER</span>
+          </div>
+
+          <div class="splatter-card card-disaster" style="--rot: -1deg;">
+            <div class="splatter-visual visual-huge">
+              <svg viewBox="0 0 180 180" width="130" height="130">
+                <path d="M 80 40 Q 120 20 140 60 Q 165 110 120 140 Q 80 165 40 130 Q 10 90 40 50 Z" fill="#d32f2f" />
+                <circle cx="155" cy="40" r="10" fill="#d32f2f" />
+                <circle cx="20" cy="140" r="9" fill="#d32f2f" />
+                <circle cx="160" cy="130" r="8" fill="#d32f2f" />
+                <circle cx="85" cy="165" r="7" fill="#d32f2f" />
+                <path d="M 75 140 Q 72 170 68 178" stroke="#d32f2f" stroke-width="6" fill="none"
+                  stroke-linecap="round" />
+                <path d="M 115 135 Q 120 165 125 174" stroke="#d32f2f" stroke-width="4" fill="none"
+                  stroke-linecap="round" />
+              </svg>
+            </div>
+            <h4>Boss</h4>
+            <span class="splatter-level text-disaster">➔ Absolute Disaster</span>
+          </div>
+        </div>
+
+        <div class="wiper-note-box">
+          <p>
+            🧽 <strong>Need to see your screen again?</strong> Drag your mouse over the blood with unlockable squeegees,
+            sponges, and microfiber cloths to scrub it off!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORIGIN STORY SECTION -->
+    <section id="story" class="section story-section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="sketch-tag">True Story</span>
+          <h2>HOW THIS STUPID IDEA STARTED</h2>
+        </div>
+
+        <div class="notebook-sheet">
+          <div class="notebook-holes">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="notebook-content">
+            <div class="story-date">Date: 11 / 09 / 2026 • Somewhere in Kerala 🌴</div>
+
+            <p>
+              The idea for <strong>Pandara Kothuk</strong> came from something I experienced on
+              <strong>11/09/2026</strong>.
+            </p>
+
+            <p>
+              I was just using my phone when a mosquito started annoying the hell out of me. It kept flying around,
+              disturbing me, and I couldn't get rid of it.
+            </p>
+
+            <div class="story-scream">
+              At one point I was like:<br>
+              <span class="scream-highlight">“പണ്ടാരം പിടിച്ച കൊതുക്!” 😭</span>
+            </div>
+
+            <p>
+              And then I thought...
+            </p>
+
+            <blockquote class="story-quote">
+              “What if this mosquito could annoy me on my screen too?” 😂
+            </blockquote>
+
+            <p>
+              And that's how <strong>Pandara Kothuk</strong> was born.
+            </p>
+
+            <p class="story-ending">
+              The idea was completely useless, but somehow, that was what made it fun.
+            </p>
+
+            <div class="notebook-author-sig">
+              — Aravind P
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOWNLOAD / CALL TO ACTION -->
+    <section id="download" class="section download-section">
+      <div class="container">
+        <div class="download-card">
+          <!-- Stray bugs buzzing near the download button -->
+          <div class="download-creature dc-1">🦟</div>
+          <div class="download-creature dc-2">🪰</div>
+          <div class="download-creature dc-3">🕷️</div>
+          <div class="download-creature dc-4">🦟</div>
+
+          <span class="sketch-tag tag-ready">Ready To Suffer?</span>
+          <h2 class="download-title">READY TO GET ANNOYED?</h2>
+          <p class="download-sub">Download Pandara Kothuk for Windows.</p>
+
+          <div class="download-btn-wrap">
+            <a href="https://github.com/aravinnndddd/Pandaara-kodhuk/releases/latest"
+              class="sketch-btn sketch-btn-download" download>
+              <span class="btn-icon">🦟</span> DOWNLOAD PANDARA KOTHUK
+            </a>
+            <div class="download-meta">
+              <span>Windows 10 / 11</span> •
+              <span>Free</span> •
+              <span>Completely Useless</span> •
+              <span>Portable (No install required)</span>
+            </div>
+          </div>
+
+          <div class="download-source-link">
+            Or clone & inspect source on
+            <a href="https://github.com/aravinnndddd/Pandaara-kodhuk" target="_blank" rel="noopener">GitHub
+              (Pandaara-kodhuk) ➔</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">PANDARA KOTHUK 🦟</div>
+          <p class="footer-desc">Made because one mosquito was apparently not annoying enough.</p>
+          <div class="footer-malayalam">"പണ്ടാരം പിടിച്ച കൊതുക്!"</div>
+        </div>
+
+        <div class="footer-nav">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#creatures">Creatures</a></li>
+            <li><a href="#weapons">Weapons</a></li>
+            <li><a href="#story">Story</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/aravinnndddd/Pandaara-kodhuk" target="_blank" rel="noopener">GitHub Repo</a>
+            </li>
+            <li><a href="https://github.com/aravinnndddd/Pandaara-kodhuk/releases" target="_blank"
+                rel="noopener">Releases (.zip)</a></li>
+            <li><a href="#download">Download Game</a></li>
+            <li><a href="https://tinkerhub.org" target="_blank" rel="noopener">TinkerHub</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>Made with ❤️ and pure spite for TinkerHub Useless Projects 3.0</p>
+        <p class="copyright">© 2026 Aravind P • Free & Open Source</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TRAILER MODAL -->
+  <div id="trailer-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button id="close-modal-btn" class="modal-close-btn" aria-label="Close modal">×</button>
+      <div class="modal-header">
+        <h3 id="modal-title">PANDARA KOTHUK - GAMEPLAY PREVIEW 🦟</h3>
+      </div>
+      <div class="modal-body">
+        <div class="trailer-screen">
+          <div class="trailer-hud">
+            <span>🔴 REC [LIVE DESKTOP HARASSMENT]</span>
+            <span>LEVEL 4: 🩴 SLIPPER</span>
+          </div>
+          <div class="interactive-sandbox" id="sandbox-canvas">
+            <p class="sandbox-instruction">👉 Click any creature in this preview box to swat it!</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#download" class="sketch-btn sketch-btn-small" id="modal-download-btn">DOWNLOAD FULL GAME</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
