@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="mosquito-sound.mp3" />
     <None Update="mosquito-sound.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

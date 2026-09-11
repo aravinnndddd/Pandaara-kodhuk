@@ -40,7 +40,7 @@ jobs:
         shell: pwsh
         run: |
           $publishDir = "./publish/DigitalMosquito-win-x64"
-          $zipPath = "./DigitalMosquito-win-x64.zip"
+          $zipPath = "./PandaaraKodhuk-win-x64.zip"
           
           # Add README
           @"

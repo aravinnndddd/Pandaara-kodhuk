@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Media;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -82,10 +84,21 @@ namespace DigitalMosquito
         {
             try
             {
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string persistentCacheDir = Path.Combine(localAppData, "PandaaraKodhuk");
+                string persistentCachePath = Path.Combine(persistentCacheDir, "mosquito-sound.mp3");
+
+                string tempCacheDir = Path.Combine(Path.GetTempPath(), "PandaaraKodhuk");
+                string tempCachePath = Path.Combine(tempCacheDir, "mosquito-sound.mp3");
+
                 string[] possiblePaths = new[]
                 {
                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sounds", "mosquito-sound.mp3"),
                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mosquito-sound.mp3"),
+                    persistentCachePath,
+                    tempCachePath,
+                    Path.Combine(Directory.GetCurrentDirectory(), "Sounds", "mosquito-sound.mp3"),
+                    Path.Combine(Directory.GetCurrentDirectory(), "mosquito-sound.mp3"),
                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "mosquito-sound.mp3"),
                     "mosquito-sound.mp3"
                 };
@@ -93,31 +106,72 @@ namespace DigitalMosquito
                 string? resolvedPath = null;
                 foreach (var path in possiblePaths)
                 {
-                    if (File.Exists(path))
+                    if (File.Exists(path) && new FileInfo(path).Length > 0)
                     {
                         resolvedPath = Path.GetFullPath(path);
                         break;
                     }
                 }
 
-                if (resolvedPath != null)
+                // If not found as a loose file on disk, extract embedded resource from assembly
+                if (resolvedPath == null)
+                {
+                    var asm = typeof(SoundManager).Assembly;
+                    string? resourceName = asm.GetManifestResourceNames()
+                        .FirstOrDefault(n => n.EndsWith("mosquito-sound.mp3", StringComparison.OrdinalIgnoreCase));
+
+                    if (resourceName != null)
+                    {
+                        string extractTarget = persistentCachePath;
+                        try
+                        {
+                            Directory.CreateDirectory(persistentCacheDir);
+                        }
+                        catch
+                        {
+                            extractTarget = tempCachePath;
+                            Directory.CreateDirectory(tempCacheDir);
+                        }
+
+                        using (var resStream = asm.GetManifestResourceStream(resourceName))
+                        {
+                            if (resStream != null)
+                            {
+                                using var fs = new FileStream(extractTarget, FileMode.Create, FileAccess.Write, FileShare.Read);
+                                resStream.CopyTo(fs);
+                            }
+                        }
+
+                        if (File.Exists(extractTarget) && new FileInfo(extractTarget).Length > 0)
+                        {
+                            resolvedPath = Path.GetFullPath(extractTarget);
+                        }
+                    }
+                }
+
+                if (resolvedPath != null && File.Exists(resolvedPath))
                 {
                     _mosquitoMediaPlayer = new MediaPlayer();
-                    _mosquitoMediaPlayer.Open(new Uri(resolvedPath));
-                    _mosquitoMediaPlayer.Volume = 0.85;
+                    _mosquitoMediaPlayer.Open(new Uri(resolvedPath, UriKind.Absolute));
+                    _mosquitoMediaPlayer.Volume = 0.90;
                     _mosquitoMediaPlayer.MediaEnded += (s, e) =>
                     {
                         if (_isMosquitoSoundPlaying && !IsMuted)
                         {
+                            _mosquitoMediaPlayer.Stop();
                             _mosquitoMediaPlayer.Position = TimeSpan.Zero;
                             _mosquitoMediaPlayer.Play();
                         }
                     };
+                    _mosquitoMediaPlayer.MediaFailed += (s, e) =>
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Mosquito MediaPlayer failed: {e.ErrorException?.Message}");
+                    };
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Fall back gracefully to procedural sound if MediaPlayer fails
+                System.Diagnostics.Debug.WriteLine($"Mosquito MP3 init exception: {ex.Message}");
             }
         }
 
@@ -154,19 +208,30 @@ namespace DigitalMosquito
                 return;
             }
 
+            if (_mosquitoMediaPlayer == null)
+            {
+                InitializeMosquitoMp3();
+            }
+
             if (_mosquitoMediaPlayer != null)
             {
                 if (!_isMosquitoSoundPlaying)
                 {
                     _isMosquitoSoundPlaying = true;
-                    _mosquitoMediaPlayer.Position = TimeSpan.Zero;
-                    _mosquitoMediaPlayer.Play();
+                    try
+                    {
+                        if (_mosquitoMediaPlayer.NaturalDuration.HasTimeSpan &&
+                            _mosquitoMediaPlayer.Position >= _mosquitoMediaPlayer.NaturalDuration.TimeSpan)
+                        {
+                            _mosquitoMediaPlayer.Position = TimeSpan.Zero;
+                        }
+                        _mosquitoMediaPlayer.Play();
+                    }
+                    catch
+                    {
+                        _mosquitoMediaPlayer.Play();
+                    }
                 }
-            }
-            else
-            {
-                // Procedural fallback
-                PlayMosquitoBuzz();
             }
         }
 
