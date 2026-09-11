@@ -57,7 +57,7 @@ namespace DigitalMosquito
 
         private readonly Window _window;
         private readonly OverlayManager _overlayManager;
-        private readonly Mosquito _mosquito;
+        private readonly Func<Creature?> _getActiveCreature;
         private readonly BloodSplatterSystem _bloodSystem;
         private readonly GameState _gameState;
 
@@ -71,18 +71,28 @@ namespace DigitalMosquito
         public InputManager(
             Window window,
             OverlayManager overlayManager,
-            Mosquito mosquito,
+            Func<Creature?> getActiveCreature,
             BloodSplatterSystem bloodSystem,
             GameState gameState)
         {
             _window = window;
             _overlayManager = overlayManager;
-            _mosquito = mosquito;
+            _getActiveCreature = getActiveCreature;
             _bloodSystem = bloodSystem;
             _gameState = gameState;
 
             _proc = HookCallback;
             InstallHook();
+        }
+
+        public InputManager(
+            Window window,
+            OverlayManager overlayManager,
+            Creature creature,
+            BloodSplatterSystem bloodSystem,
+            GameState gameState)
+            : this(window, overlayManager, () => creature, bloodSystem, gameState)
+        {
         }
 
         private void InstallHook()
@@ -108,6 +118,20 @@ namespace DigitalMosquito
             {
                 // Fallback if visual presentation source is not yet ready
             }
+
+            // High-DPI fallback conversion
+            try
+            {
+                var dpi = VisualTreeHelper.GetDpi(_window);
+                if (dpi.DpiScaleX > 0.01 && dpi.DpiScaleY > 0.01)
+                {
+                    return new Point(screenPt.X / dpi.DpiScaleX, screenPt.Y / dpi.DpiScaleY);
+                }
+            }
+            catch
+            {
+            }
+
             return screenPt;
         }
 
@@ -124,14 +148,15 @@ namespace DigitalMosquito
 
                 bool isOverHud = IsOverHud != null && IsOverHud(clientPt);
 
-                // Intercept clicks on mosquito or blood to prevent passing through to underlying apps.
-                // Notice: If over HUD, we allow the click to hit our own window's buttons!
+                // Intercept clicks on creature or blood to prevent passing through to underlying apps.
+                // If over HUD, allow the click to hit our own window's buttons.
                 if (msg == WM_LBUTTONDOWN && !isOverHud)
                 {
                     _isLeftMouseDown = true;
                     if (_gameState.CurrentPhase == GamePhase.Flying)
                     {
-                        if (_mosquito.IsHit(clientPt))
+                        var creature = _getActiveCreature();
+                        if (creature != null && creature.IsHit(clientPt))
                         {
                             _window.Dispatcher.Invoke(() =>
                             {
@@ -183,7 +208,8 @@ namespace DigitalMosquito
             }
             else if (_gameState.CurrentPhase == GamePhase.Flying)
             {
-                isOverInteractive = _mosquito.IsHit(clientPt);
+                var creature = _getActiveCreature();
+                isOverInteractive = creature != null && creature.IsHit(clientPt);
                 if (isOverInteractive)
                 {
                     targetCursor = Cursors.Cross; // Crosshair / Swatter indicator

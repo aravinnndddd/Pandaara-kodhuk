@@ -1,7 +1,7 @@
 <Window x:Class="DigitalMosquito.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Digital Mosquito"
+        Title="Pandaara കൊതുക്"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -16,12 +16,47 @@
         Closing="Window_Closing">
 
     <Canvas x:Name="OverlayCanvas" Background="Transparent">
+        <Canvas.RenderTransform>
+            <TranslateTransform x:Name="ScreenShakeTransform" X="0" Y="0" />
+        </Canvas.RenderTransform>
+
+        <!-- Cracked Glass & Web Fracture FX -->
+        <Canvas x:Name="GlassCrackCanvas" IsHitTestVisible="False" />
+
+        <!-- Sudden Blackout Strobe Layer -->
+        <Border x:Name="BlackoutOverlay"
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}}"
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}}"
+                Background="Black"
+                Opacity="0"
+                IsHitTestVisible="False" />
+
+        <!-- Full-Screen Horror Jumpscare Flash Overlay -->
+        <Border x:Name="HorrorFlashOverlay"
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}}"
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}}"
+                Opacity="0"
+                IsHitTestVisible="False">
+            <Border.Background>
+                <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.85" RadiusY="0.85">
+                    <GradientStop Color="#00000000" Offset="0.15" />
+                    <GradientStop Color="#B0550000" Offset="0.55" />
+                    <GradientStop Color="#FFAA0000" Offset="1.0" />
+                </RadialGradientBrush>
+            </Border.Background>
+        </Border>
 
         <!-- Blood splatter layer -->
         <Canvas x:Name="BloodCanvas" IsHitTestVisible="False" />
 
-        <!-- Mosquito layer -->
-        <Canvas x:Name="MosquitoContainer" IsHitTestVisible="False" />
+        <!-- Creature visual layer (Mosquitoes, Spiders, Giant Spiders, Bosses) -->
+        <Canvas x:Name="CreatureContainer" IsHitTestVisible="False" />
+
+        <!-- Weapon Attack Visuals Layer (Swatter, Slipper, Bat, Hammer, Vacuum, Electric, etc.) -->
+        <Canvas x:Name="WeaponFxCanvas" IsHitTestVisible="False" />
+
+        <!-- Cinema Horror Jumpscare Monster Layer -->
+        <Canvas x:Name="NightmareCanvas" IsHitTestVisible="False" />
 
         <!-- Swat Impact Ripple FX -->
         <Ellipse x:Name="ImpactRipple"
@@ -31,31 +66,67 @@
                  Opacity="0"
                  IsHitTestVisible="False" />
 
-        <!-- Cleaning Prompt & Progress Indicator -->
-        <Border x:Name="CleaningPrompt"
-                CornerRadius="16"
-                Background="#D018181E"
-                BorderBrush="#44FF4444"
+        <!-- Foam Bubbles & Suds FX Layer -->
+        <Canvas x:Name="BubbleFxCanvas" IsHitTestVisible="False" />
+
+        <!-- Floating Cleaner Cursor Companion (shown when hovering/wiping blood) -->
+        <Border x:Name="CleanerCursorFx"
+                CornerRadius="12"
+                Background="#EE14141E"
+                BorderBrush="#6633DDFF"
                 BorderThickness="1"
-                Padding="12,6"
+                Padding="6,3"
                 Opacity="0"
                 IsHitTestVisible="False">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.4" Color="Black" />
+                <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.4" Color="Black" />
             </Border.Effect>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="🧽" FontSize="16" Margin="0,0,8,0" VerticalAlignment="Center" />
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Rub mouse to clean blood!"
+                <TextBlock x:Name="CleanerCursorIcon" Text="🧽" FontSize="13" Margin="0,0,4,0" VerticalAlignment="Center" />
+                <TextBlock x:Name="CleanerCursorName" Text="Sponge" FontSize="10" FontWeight="Bold" Foreground="#33DDFF" VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <!-- Upgraded Cleaning Prompt & Progress Indicator -->
+        <Border x:Name="CleaningPrompt"
+                CornerRadius="16"
+                Background="#EE14141E"
+                BorderBrush="#5533DDFF"
+                BorderThickness="1.5"
+                Padding="14,8"
+                Opacity="0"
+                IsHitTestVisible="False">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="14" ShadowDepth="2" Opacity="0.5" Color="Black" />
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock x:Name="CleaningToolIcon" Text="🧽" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center" />
+                <StackPanel VerticalAlignment="Center" Width="180">
+                    <Grid Margin="0,0,0,2">
+                        <TextBlock x:Name="CleaningToolName"
+                                   Text="Microfiber Sponge"
+                                   Foreground="#33DDFF"
+                                   FontSize="11"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Left" />
+                        <TextBlock x:Name="CleaningBonusXpText"
+                                   Text="+15 Clean XP"
+                                   Foreground="#FFD700"
+                                   FontSize="10"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Right" />
+                    </Grid>
+                    <TextBlock x:Name="CleaningPromptText"
+                               Text="Rub mouse to clean blood!"
                                Foreground="#EEEEEE"
-                               FontSize="12"
+                               FontSize="11"
                                FontWeight="SemiBold"
                                FontFamily="Segoe UI, sans-serif" />
                     <ProgressBar x:Name="CleaningProgressBar"
-                                 Width="130" Height="4"
-                                 Margin="0,3,0,0"
-                                 Background="#33FFFFFF"
-                                 Foreground="#FF4444"
+                                 Width="180" Height="5"
+                                 Margin="0,4,0,0"
+                                 Background="#22FFFFFF"
+                                 Foreground="#80FF20"
                                  Minimum="0" Maximum="100" Value="0" />
                 </StackPanel>
             </StackPanel>
@@ -63,116 +134,340 @@
 
         <!-- Cleaned Sparkle FX -->
         <TextBlock x:Name="SparkleFx"
-                   Text="✨ Cleaned!"
+                   Text="✨ CLEANED! +15 XP ✨"
                    Foreground="#FFDF00"
                    FontWeight="Bold"
-                   FontSize="16"
+                   FontSize="18"
                    Opacity="0"
                    IsHitTestVisible="False">
             <TextBlock.Effect>
-                <DropShadowEffect BlurRadius="8" ShadowDepth="0" Color="#FFD700" Opacity="0.8" />
+                <DropShadowEffect BlurRadius="12" ShadowDepth="0" Color="#FFD700" Opacity="0.95" />
             </TextBlock.Effect>
         </TextBlock>
 
-        <!-- Top-Right Discreet HUD: Kill Counter, Speed Controls, & Exit -->
-        <Border x:Name="HudBadge"
-                Canvas.Right="24" Canvas.Top="20"
-                CornerRadius="14"
-                Background="#D8141418"
-                BorderBrush="#44FFFFFF"
-                BorderThickness="1"
-                Padding="12,6"
-                Opacity="0.95"
-                IsHitTestVisible="True">
+        <!-- Celebratory Level-Up Banner (Freezes gameplay for 1.5s) -->
+        <Border x:Name="LevelUpBanner"
+                CornerRadius="20"
+                Background="#F014141C"
+                BorderBrush="#FFD700"
+                BorderThickness="2"
+                Padding="36,20"
+                Opacity="0"
+                IsHitTestVisible="False">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.45" Color="Black" />
+                <DropShadowEffect BlurRadius="30" ShadowDepth="0" Color="#FFD700" Opacity="0.9" />
             </Border.Effect>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <!-- Kill Counter -->
-                <TextBlock Text="🦟" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" />
-                <TextBlock x:Name="KillCountText"
-                           Text="0 Kills"
-                           Foreground="#FFFFFF"
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="LevelUpScaleTransform" ScaleX="1" ScaleY="1" CenterX="150" CenterY="70" />
+                    <TranslateTransform x:Name="LevelUpTranslateTransform" X="0" Y="0" />
+                </TransformGroup>
+            </Border.RenderTransform>
+            <StackPanel HorizontalAlignment="Center" Width="280">
+                <TextBlock Text="✦ LEVEL UP ✦"
+                           FontSize="14"
                            FontWeight="Bold"
-                           FontSize="12"
-                           FontFamily="Segoe UI, sans-serif"
-                           VerticalAlignment="Center" />
-
-                <!-- Separator -->
-                <Rectangle Width="1" Height="14" Fill="#33FFFFFF" Margin="10,0" VerticalAlignment="Center" />
-
-                <!-- Speed Control Label -->
-                <TextBlock Text="Speed:"
-                           Foreground="#888888"
+                           Foreground="#FFD700"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,6">
+                    <TextBlock.Effect>
+                        <DropShadowEffect BlurRadius="8" Color="#FFD700" Opacity="0.9" ShadowDepth="0" />
+                    </TextBlock.Effect>
+                </TextBlock>
+                <TextBlock x:Name="LevelUpLevelText"
+                           Text="LEVEL 2"
+                           FontSize="28"
+                           FontWeight="ExtraBold"
+                           Foreground="#FFFFFF"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,6" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,6">
+                    <TextBlock x:Name="LevelUpWeaponIcon" Text="🪰" FontSize="30" Margin="0,0,10,0" VerticalAlignment="Center" />
+                    <TextBlock x:Name="LevelUpWeaponName" Text="FLY SWATTER UNLOCKED" FontSize="16" FontWeight="Bold" Foreground="#33DDFF" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock x:Name="LevelUpMilestoneText"
+                           Text="5 KILLS REACHED"
                            FontSize="11"
                            FontWeight="SemiBold"
-                           FontFamily="Segoe UI, sans-serif"
-                           VerticalAlignment="Center"
-                           Margin="0,0,6,0" />
-
-                <!-- Speed Presets -->
-                <Border x:Name="SpeedBtnSlow"
-                        CornerRadius="6"
-                        Background="#20FFFFFF"
-                        Padding="6,2"
-                        Margin="0,0,3,0"
-                        Cursor="Hand"
-                        MouseDown="SpeedBtn_MouseDown"
-                        Tag="0.5">
-                    <TextBlock x:Name="SpeedTxtSlow" Text="0.5x" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
-                </Border>
-
-                <Border x:Name="SpeedBtnNormal"
-                        CornerRadius="6"
-                        Background="#CCFF2222"
-                        Padding="6,2"
-                        Margin="0,0,3,0"
-                        Cursor="Hand"
-                        MouseDown="SpeedBtn_MouseDown"
-                        Tag="1.0">
-                    <TextBlock x:Name="SpeedTxtNormal" Text="1.0x" FontSize="11" FontWeight="Bold" Foreground="#FFFFFF" />
-                </Border>
-
-                <Border x:Name="SpeedBtnFast"
-                        CornerRadius="6"
-                        Background="#20FFFFFF"
-                        Padding="6,2"
-                        Margin="0,0,3,0"
-                        Cursor="Hand"
-                        MouseDown="SpeedBtn_MouseDown"
-                        Tag="1.8">
-                    <TextBlock x:Name="SpeedTxtFast" Text="1.8x" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
-                </Border>
-
-                <Border x:Name="SpeedBtnChaos"
-                        CornerRadius="6"
-                        Background="#20FFFFFF"
-                        Padding="6,2"
-                        Cursor="Hand"
-                        MouseDown="SpeedBtn_MouseDown"
-                        Tag="2.8">
-                    <TextBlock x:Name="SpeedTxtChaos" Text="⚡ 2.8x" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
-                </Border>
-
-                <!-- Separator -->
-                <Rectangle Width="1" Height="14" Fill="#33FFFFFF" Margin="10,0" VerticalAlignment="Center" />
-
-                <!-- Exit Button -->
-                <Border x:Name="ExitBtn"
-                        CornerRadius="6"
-                        Background="#20FFFFFF"
-                        Padding="6,2"
-                        Cursor="Hand"
-                        MouseDown="ExitBtn_MouseDown">
-                    <TextBlock Text="✕ Exit"
-                               Foreground="#FF6666"
-                               FontSize="11"
-                               FontWeight="SemiBold"
-                               FontFamily="Segoe UI, sans-serif"
-                               VerticalAlignment="Center" />
-                </Border>
+                           Foreground="#AAAAAA"
+                           HorizontalAlignment="Center"
+                           Margin="0,4,0,0" />
             </StackPanel>
         </Border>
+
+        <!-- Bottom Minecraft-Style Clean Kill/XP Progress Bar -->
+        <Border x:Name="BottomProgressBarContainer"
+                Canvas.Bottom="18"
+                CornerRadius="6"
+                Background="#E5121412"
+                BorderBrush="#334422"
+                BorderThickness="1"
+                Padding="14,6"
+                IsHitTestVisible="True"
+                MouseDown="BottomBar_MouseDown">
+            <StackPanel Orientation="Vertical" Width="320">
+                <!-- Level, Weapon & Kills Remaining Info -->
+                <Grid Margin="0,0,0,4">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock x:Name="BottomWeaponIcon" Text="👋" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" />
+                        <TextBlock x:Name="BottomLevelText" Text="LV 1" FontWeight="Bold" FontSize="12" Foreground="#80FF20" VerticalAlignment="Center" />
+                        <TextBlock x:Name="BottomWeaponName" Text="Hand" FontWeight="SemiBold" FontSize="11" Foreground="#CCCCCC" Margin="6,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBlock x:Name="BottomKillsProgressText"
+                               Text="0 / 5 KILLS"
+                               FontWeight="Bold"
+                               FontSize="11"
+                               Foreground="#FFFFFF"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center" />
+                </Grid>
+
+                <!-- Simple Minecraft-Style Green XP Bar (No Gradients) -->
+                <Grid Height="7">
+                    <!-- Dark slot track -->
+                    <Rectangle Fill="#16220D" Stroke="#0D1607" StrokeThickness="1" />
+                    <!-- Solid Minecraft vibrant lime green fill -->
+                    <Rectangle x:Name="BottomProgressBarFill"
+                               HorizontalAlignment="Left"
+                               Width="0"
+                               Fill="#80FF20" />
+                </Grid>
+
+                <!-- Cleaner Tier & XP Counter -->
+                <Grid Margin="0,3,0,0">
+                    <TextBlock x:Name="BottomNextUnlockHint"
+                               Text="Next: 🪰 Fly Swatter"
+                               FontSize="10"
+                               Foreground="#777777"
+                               HorizontalAlignment="Left" />
+                    <TextBlock x:Name="BottomCleanerTierText"
+                               Text="Cleaner: 🧻 Tissue"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#AAAAAA"
+                               HorizontalAlignment="Center" />
+                    <TextBlock x:Name="BottomXpText"
+                               Text="★ 0 XP"
+                               FontSize="10"
+                               FontWeight="Bold"
+                               Foreground="#80FF20"
+                               HorizontalAlignment="Right" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Top-Right Compact Collapsible HUD Widget -->
+        <!-- 1. Collapsed Square View: ┌─────┐ │ 🦟 │ └─────┘ -->
+        <Border x:Name="HudCollapsedPill"
+                Canvas.Right="24" Canvas.Top="20"
+                CornerRadius="8"
+                Width="38" Height="36"
+                Background="#EE141418"
+                BorderBrush="#55FFFFFF"
+                BorderThickness="1.5"
+                Cursor="Hand"
+                Visibility="Collapsed"
+                MouseDown="HudCollapsedPill_MouseDown"
+                ToolTip="Pandaara കൊതുക് (Click to expand controls)">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.5" Color="Black" />
+            </Border.Effect>
+            <TextBlock x:Name="CollapsedCreatureIcon"
+                       Text="🦟"
+                       FontSize="18"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </Border>
+
+        <!-- 2. Expanded Compact HUD: 🦟  LV5  25  ⏸ 🔊 ⚙ × -->
+        <StackPanel x:Name="HudExpandedContainer"
+                    Canvas.Right="24" Canvas.Top="20"
+                    Orientation="Vertical"
+                    HorizontalAlignment="Right">
+            <Border x:Name="HudBadge"
+                    CornerRadius="12"
+                    Background="#EE141418"
+                    BorderBrush="#44FFFFFF"
+                    BorderThickness="1"
+                    Padding="8,5"
+                    Opacity="0.95"
+                    IsHitTestVisible="True">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.5" Color="Black" />
+                </Border.Effect>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Creature Icon (Click to cycle creature) -->
+                    <Border x:Name="CreatureCycleBtn"
+                            CornerRadius="6"
+                            Background="#22FFFFFF"
+                            Padding="5,2"
+                            Margin="0,0,7,0"
+                            Cursor="Hand"
+                            MouseDown="CreatureCycleBtn_MouseDown"
+                            ToolTip="Creature: Click to cycle (Auto / Mosquito / Spider / Giant / Boss)">
+                        <TextBlock x:Name="CreatureIconText" Text="🦟" FontSize="14" VerticalAlignment="Center" />
+                    </Border>
+
+                    <!-- Level Badge (e.g. LV5) -->
+                    <TextBlock x:Name="DifficultyText"
+                               Text="LV1"
+                               Foreground="#FFD700"
+                               FontSize="12"
+                               FontWeight="Bold"
+                               FontFamily="Segoe UI, sans-serif"
+                               Margin="0,0,7,0"
+                               VerticalAlignment="Center" />
+
+                    <!-- Total Kills Counter (e.g. 25) -->
+                    <TextBlock x:Name="KillCountText"
+                               Text="0"
+                               Foreground="#FFFFFF"
+                               FontWeight="Bold"
+                               FontSize="12"
+                               FontFamily="Segoe UI, sans-serif"
+                               Margin="0,0,7,0"
+                               VerticalAlignment="Center"
+                               ToolTip="Total Kills" />
+
+                    <!-- Separator -->
+                    <Rectangle Width="1" Height="13" Fill="#33FFFFFF" Margin="0,0,7,0" VerticalAlignment="Center" />
+
+                    <!-- Pause Button (⏸ / ▶) -->
+                    <Border x:Name="PauseBtn"
+                            CornerRadius="6"
+                            Background="#20FFFFFF"
+                            Padding="6,2"
+                            Margin="0,0,4,0"
+                            Cursor="Hand"
+                            MouseDown="PauseBtn_MouseDown"
+                            ToolTip="Pause/Resume (P or Space)">
+                        <TextBlock x:Name="PauseTxt" Text="⏸" FontSize="11" Foreground="#CCCCCC" VerticalAlignment="Center" />
+                    </Border>
+
+                    <!-- Sound Toggle Button (🔊 / 🔇) -->
+                    <Border x:Name="SoundBtn"
+                            CornerRadius="6"
+                            Background="#20FFFFFF"
+                            Padding="6,2"
+                            Margin="0,0,4,0"
+                            Cursor="Hand"
+                            MouseDown="SoundBtn_MouseDown"
+                            ToolTip="Toggle Sound (M)">
+                        <TextBlock x:Name="SoundTxt" Text="🔇" FontSize="11" Foreground="#CCCCCC" VerticalAlignment="Center" />
+                    </Border>
+
+                    <!-- Reset Button (🔄) -->
+                    <Border x:Name="ResetBtn"
+                            CornerRadius="6"
+                            Background="#20FFFFFF"
+                            Padding="6,2"
+                            Margin="0,0,4,0"
+                            Cursor="Hand"
+                            MouseDown="ResetBtn_MouseDown"
+                            ToolTip="Reset Kills &amp; Progress (R)">
+                        <TextBlock x:Name="ResetTxt" Text="🔄" FontSize="11" Foreground="#CCCCCC" VerticalAlignment="Center" />
+                    </Border>
+
+                    <!-- Settings Button (⚙) -->
+                    <Border x:Name="SettingsBtn"
+                            CornerRadius="6"
+                            Background="#20FFFFFF"
+                            Padding="6,2"
+                            Margin="0,0,4,0"
+                            Cursor="Hand"
+                            MouseDown="SettingsBtn_MouseDown"
+                            ToolTip="Toggle Settings (Creature types, Speeds, Jumpscares)">
+                        <TextBlock x:Name="SettingsTxt" Text="⚙" FontSize="11" Foreground="#CCCCCC" VerticalAlignment="Center" />
+                    </Border>
+
+                    <!-- Collapse Button (◀) -->
+                    <Border x:Name="CollapseBtn"
+                            CornerRadius="6"
+                            Background="#20FFFFFF"
+                            Padding="5,2"
+                            Margin="0,0,4,0"
+                            Cursor="Hand"
+                            MouseDown="CollapseBtn_MouseDown"
+                            ToolTip="Collapse to Mini Icon">
+                        <TextBlock Text="◀" Foreground="#888888" FontSize="9" FontWeight="Bold" VerticalAlignment="Center" />
+                    </Border>
+
+                    <!-- Exit Button (×) -->
+                    <Border x:Name="ExitBtn"
+                            CornerRadius="6"
+                            Background="#2BF04040"
+                            Padding="6,2"
+                            Cursor="Hand"
+                            MouseDown="ExitBtn_MouseDown"
+                            ToolTip="Exit Game (Esc)">
+                        <TextBlock Text="×" Foreground="#FFAAAA" FontSize="13" FontWeight="Bold" VerticalAlignment="Center" />
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- 3. Collapsible Settings Drawer -->
+            <Border x:Name="HudSettingsDrawer"
+                    CornerRadius="10"
+                    Background="#F0141418"
+                    BorderBrush="#33FFFFFF"
+                    BorderThickness="1"
+                    Padding="10,8"
+                    Margin="0,6,0,0"
+                    Visibility="Collapsed">
+                <StackPanel Orientation="Vertical">
+                    <!-- Row 1: Creature Presets -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                        <TextBlock Text="Creature: " Foreground="#888888" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0" />
+                        <Border x:Name="TypeBtnAuto" CornerRadius="5" Background="#CCFF2222" Padding="5,2" Margin="0,0,3,0" Cursor="Hand" MouseDown="TypeBtn_MouseDown" Tag="Auto" ToolTip="Auto select (Mosquito/Spider/Boss)">
+                            <TextBlock x:Name="TypeTxtAuto" Text="🎲 Auto" FontSize="11" FontWeight="Bold" Foreground="#FFFFFF" />
+                        </Border>
+                        <Border x:Name="TypeBtnMosquito" CornerRadius="5" Background="#20FFFFFF" Padding="5,2" Margin="0,0,3,0" Cursor="Hand" MouseDown="TypeBtn_MouseDown" Tag="Mosquito" ToolTip="Mosquito only">
+                            <TextBlock x:Name="TypeTxtMosquito" Text="🦟 Mosquito" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
+                        </Border>
+                        <Border x:Name="TypeBtnSpider" CornerRadius="5" Background="#20FFFFFF" Padding="5,2" Margin="0,0,3,0" Cursor="Hand" MouseDown="TypeBtn_MouseDown" Tag="Spider" ToolTip="Spider only">
+                            <TextBlock x:Name="TypeTxtSpider" Text="🕷️ Spider" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
+                        </Border>
+                        <Border x:Name="TypeBtnGiant" CornerRadius="5" Background="#20FFFFFF" Padding="5,2" Margin="0,0,3,0" Cursor="Hand" MouseDown="TypeBtn_MouseDown" Tag="GiantSpider" ToolTip="Giant Spider with huge blood">
+                            <TextBlock x:Name="TypeTxtGiant" Text="💀 Giant" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
+                        </Border>
+                        <Border x:Name="TypeBtnBoss" CornerRadius="5" Background="#20FFFFFF" Padding="5,2" Cursor="Hand" MouseDown="TypeBtn_MouseDown" Tag="Boss" ToolTip="Legendary Boss encounters">
+                            <TextBlock x:Name="TypeTxtBoss" Text="👑 Boss" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Row 2: Speed Presets & Jumpscare Toggle -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                        <TextBlock Text="Speed: " Foreground="#888888" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0" />
+                        <Border x:Name="SpeedBtnSlow" CornerRadius="5" Background="#20FFFFFF" Padding="5,2" Margin="0,0,3,0" Cursor="Hand" MouseDown="SpeedBtn_MouseDown" Tag="0.5">
+                            <TextBlock x:Name="SpeedTxtSlow" Text="0.5x" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
+                        </Border>
+                        <Border x:Name="SpeedBtnNormal" CornerRadius="5" Background="#CCFF2222" Padding="5,2" Margin="0,0,3,0" Cursor="Hand" MouseDown="SpeedBtn_MouseDown" Tag="1.0">
+                            <TextBlock x:Name="SpeedTxtNormal" Text="1.0x" FontSize="11" FontWeight="Bold" Foreground="#FFFFFF" />
+                        </Border>
+                        <Border x:Name="SpeedBtnFast" CornerRadius="5" Background="#20FFFFFF" Padding="5,2" Margin="0,0,3,0" Cursor="Hand" MouseDown="SpeedBtn_MouseDown" Tag="1.8">
+                            <TextBlock x:Name="SpeedTxtFast" Text="1.8x" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
+                        </Border>
+                        <Border x:Name="SpeedBtnChaos" CornerRadius="5" Background="#20FFFFFF" Padding="5,2" Margin="0,0,8,0" Cursor="Hand" MouseDown="SpeedBtn_MouseDown" Tag="2.8">
+                            <TextBlock x:Name="SpeedTxtChaos" Text="⚡ 2.8x" FontSize="11" FontWeight="SemiBold" Foreground="#888888" />
+                        </Border>
+
+                        <Border x:Name="JumpscareBtn" CornerRadius="5" Background="#CC882222" Padding="6,2" Cursor="Hand" MouseDown="JumpscareBtn_MouseDown" ToolTip="Toggle Jumpscares (J)">
+                            <TextBlock x:Name="JumpscareTxt" Text="👻 Scares: ON" FontSize="11" FontWeight="Bold" Foreground="#FFFFFF" />
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Row 3: Respawn & Reset Actions -->
+                    <StackPanel Orientation="Horizontal">
+                        <Border x:Name="RespawnCreatureBtn" CornerRadius="5" Background="#20FFFFFF" Padding="6,2" Margin="0,0,6,0" Cursor="Hand" MouseDown="RespawnCreatureBtn_MouseDown" ToolTip="Respawn creature at random screen edge">
+                            <TextBlock Text="🔄 Respawn Creature" FontSize="11" FontWeight="SemiBold" Foreground="#CCCCCC" />
+                        </Border>
+                        <Border x:Name="ResetProgressSettingsBtn" CornerRadius="5" Background="#33FF4444" BorderBrush="#66FF4444" BorderThickness="1" Padding="6,2" Cursor="Hand" MouseDown="ResetProgressSettingsBtn_MouseDown" ToolTip="Reset kills, XP, and weapon progression back to Level 1">
+                            <TextBlock x:Name="ResetProgressSettingsTxt" Text="⚠️ Reset Progress" FontSize="11" FontWeight="Bold" Foreground="#FFAAAA" />
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
 
     </Canvas>
 </Window>

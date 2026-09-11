@@ -1,5 +1,5 @@
-using System.Configuration;
-using System.Data;
+using System;
+using System.IO;
 using System.Windows;
 
 namespace DigitalMosquito;
@@ -9,21 +9,44 @@ namespace DigitalMosquito;
 /// </summary>
 public partial class App : Application
 {
+    private static readonly string LogPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "debug.log");
+
     protected override void OnStartup(StartupEventArgs e)
     {
-        System.IO.File.WriteAllText("debug.log", "App.OnStartup called\n");
+        try
+        {
+            File.WriteAllText(LogPath, $"[{DateTime.UtcNow:O}] App.OnStartup called\n");
+        }
+        catch { }
 
         AppDomain.CurrentDomain.UnhandledException += (s, args) =>
         {
-            System.IO.File.AppendAllText("debug.log", "UnhandledException: " + args.ExceptionObject?.ToString() + "\n");
+            try
+            {
+                File.AppendAllText(LogPath, $"[{DateTime.UtcNow:O}] UnhandledException: {args.ExceptionObject}\n");
+            }
+            catch { }
         };
 
         DispatcherUnhandledException += (s, args) =>
         {
-            System.IO.File.AppendAllText("debug.log", "DispatcherUnhandledException: " + args.Exception?.ToString() + "\n");
+            try
+            {
+                File.AppendAllText(LogPath, $"[{DateTime.UtcNow:O}] DispatcherUnhandledException: {args.Exception}\n");
+            }
+            catch { }
         };
 
         base.OnStartup(e);
     }
-}
 
+    protected override void OnExit(ExitEventArgs e)
+    {
+        try
+        {
+            File.AppendAllText(LogPath, $"[{DateTime.UtcNow:O}] App.OnExit called with code: {e.ApplicationExitCode}\n");
+        }
+        catch { }
+        base.OnExit(e);
+    }
+}

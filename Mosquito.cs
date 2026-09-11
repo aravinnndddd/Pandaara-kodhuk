@@ -3,38 +3,33 @@ using System.Windows;
 
 namespace DigitalMosquito
 {
-    public class Mosquito
+    public class Mosquito : Creature
     {
         private readonly Random _random = new();
+        private readonly MosquitoRenderer _renderer;
 
-        public double X { get; private set; }
-        public double Y { get; private set; }
+        public override CreatureType CreatureType => CreatureType.Mosquito;
+        public override string Name => "Mosquito";
+        public override double HitRadius => 130.0;
+        public override BloodConfig BloodConfig => BloodConfig.MosquitoPreset;
+        public override FrameworkElement VisualElement => _renderer.VisualElement;
 
-        public double AngleDegrees { get; private set; }
         public double WingPhase { get; private set; }
 
-        public double HitRadius { get; } = 42.0;
-
-        private double _speedMultiplier = 1.0;
-
-        public double SpeedMultiplier
+        public override double SpeedMultiplier
         {
-            get => _speedMultiplier;
+            get => base.SpeedMultiplier;
             set
             {
-                double old = _speedMultiplier;
-                _speedMultiplier = Math.Clamp(value, 0.2, 5.0);
+                double old = base.SpeedMultiplier;
+                base.SpeedMultiplier = value;
                 if (old > 0.001)
                 {
-                    _currentSpeed = (_currentSpeed / old) * _speedMultiplier;
-                    _targetSpeed = (_targetSpeed / old) * _speedMultiplier;
+                    _currentSpeed = (_currentSpeed / old) * base.SpeedMultiplier;
+                    _targetSpeed = (_targetSpeed / old) * base.SpeedMultiplier;
                 }
             }
         }
-
-        // Visual position including high-frequency buzzing jitter
-        public double DisplayX { get; private set; }
-        public double DisplayY { get; private set; }
 
         private double _vx = 4.0;
         private double _vy = 2.0;
@@ -51,10 +46,11 @@ namespace DigitalMosquito
 
         public Mosquito()
         {
+            _renderer = new MosquitoRenderer();
             ResetToRandomPosition(SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight);
         }
 
-        public void ResetToRandomPosition(double screenWidth, double screenHeight)
+        public override void ResetToRandomPosition(double screenWidth, double screenHeight)
         {
             if (screenWidth <= 100) screenWidth = 1920;
             if (screenHeight <= 100) screenHeight = 1080;
@@ -66,35 +62,36 @@ namespace DigitalMosquito
                 case 0: // Left
                     X = 30;
                     Y = _random.NextDouble() * (screenHeight - 100) + 50;
-                    _vx = (3 + _random.NextDouble() * 3) * _speedMultiplier;
-                    _vy = (_random.NextDouble() - 0.5) * 4 * _speedMultiplier;
+                    _vx = (3 + _random.NextDouble() * 3) * SpeedMultiplier;
+                    _vy = (_random.NextDouble() - 0.5) * 4 * SpeedMultiplier;
                     break;
                 case 1: // Right
                     X = screenWidth - 50;
                     Y = _random.NextDouble() * (screenHeight - 100) + 50;
-                    _vx = -(3 + _random.NextDouble() * 3) * _speedMultiplier;
-                    _vy = (_random.NextDouble() - 0.5) * 4 * _speedMultiplier;
+                    _vx = -(3 + _random.NextDouble() * 3) * SpeedMultiplier;
+                    _vy = (_random.NextDouble() - 0.5) * 4 * SpeedMultiplier;
                     break;
                 case 2: // Top
                     X = _random.NextDouble() * (screenWidth - 100) + 50;
                     Y = 30;
-                    _vx = (_random.NextDouble() - 0.5) * 4 * _speedMultiplier;
-                    _vy = (3 + _random.NextDouble() * 3) * _speedMultiplier;
+                    _vx = (_random.NextDouble() - 0.5) * 4 * SpeedMultiplier;
+                    _vy = (3 + _random.NextDouble() * 3) * SpeedMultiplier;
                     break;
                 default: // Bottom
                     X = _random.NextDouble() * (screenWidth - 100) + 50;
                     Y = screenHeight - 50;
-                    _vx = (_random.NextDouble() - 0.5) * 4 * _speedMultiplier;
-                    _vy = -(3 + _random.NextDouble() * 3) * _speedMultiplier;
+                    _vx = (_random.NextDouble() - 0.5) * 4 * SpeedMultiplier;
+                    _vy = -(3 + _random.NextDouble() * 3) * SpeedMultiplier;
                     break;
             }
 
             DisplayX = X;
             DisplayY = Y;
             UpdateAngle();
+            _renderer.Render(this);
         }
 
-        public void Update(double deltaTime, double screenWidth, double screenHeight)
+        public override void Update(double deltaTime, double screenWidth, double screenHeight)
         {
             if (screenWidth <= 100) screenWidth = 1920;
             if (screenHeight <= 100) screenHeight = 1080;
@@ -107,20 +104,20 @@ namespace DigitalMosquito
                 if (mode < 2)
                 {
                     // Hovering pause (slow buzzing in place)
-                    _targetSpeed = (1.0 + _random.NextDouble() * 1.5) * _speedMultiplier;
+                    _targetSpeed = (1.0 + _random.NextDouble() * 1.5) * SpeedMultiplier;
                     _speedChangeTimer = 0.4 + _random.NextDouble() * 0.8;
                 }
                 else if (mode < 5)
                 {
                     // Sudden dart burst
-                    _targetSpeed = (8.5 + _random.NextDouble() * 5.0) * _speedMultiplier;
-                    _speedChangeTimer = (0.3 + _random.NextDouble() * 0.5) / Math.Max(0.5, _speedMultiplier);
+                    _targetSpeed = (8.5 + _random.NextDouble() * 5.0) * SpeedMultiplier;
+                    _speedChangeTimer = (0.3 + _random.NextDouble() * 0.5) / Math.Max(0.5, SpeedMultiplier);
                 }
                 else
                 {
                     // Normal cruising
-                    _targetSpeed = (3.5 + _random.NextDouble() * 2.5) * _speedMultiplier;
-                    _speedChangeTimer = (0.8 + _random.NextDouble() * 1.5) / Math.Max(0.5, _speedMultiplier);
+                    _targetSpeed = (3.5 + _random.NextDouble() * 2.5) * SpeedMultiplier;
+                    _speedChangeTimer = (0.8 + _random.NextDouble() * 1.5) / Math.Max(0.5, SpeedMultiplier);
                 }
             }
 
@@ -193,7 +190,7 @@ namespace DigitalMosquito
             Y += _vy;
 
             // 4. Insect buzzing wobble (perpendicular to flight direction)
-            _jitterTime += deltaTime * (35.0 + 20.0 * _speedMultiplier);
+            _jitterTime += deltaTime * (35.0 + 20.0 * SpeedMultiplier);
             double normalX = -_vy;
             double normalY = _vx;
             double normalLen = Math.Sqrt(normalX * normalX + normalY * normalY);
@@ -206,24 +203,26 @@ namespace DigitalMosquito
             double wobble = Math.Sin(_jitterTime) * 3.5 + Math.Sin(_jitterTime * 2.3) * 1.5;
             DisplayX = X + normalX * wobble;
             DisplayY = Y + normalY * wobble;
+            RecordPosition(DisplayX, DisplayY);
 
             // 5. Update heading angle and wing flutter phase
             UpdateAngle();
-            WingPhase = (WingPhase + deltaTime * (45.0 + 35.0 * _speedMultiplier)) % (Math.PI * 2);
+            WingPhase = (WingPhase + deltaTime * (45.0 + 35.0 * SpeedMultiplier)) % (Math.PI * 2);
+
+            // 6. Update visual rendering
+            _renderer.Render(this);
         }
 
         private void UpdateAngle()
         {
-            // Calculate angle in degrees for WPF RenderTransform
             double radians = Math.Atan2(_vy, _vx);
             AngleDegrees = radians * (180.0 / Math.PI);
         }
 
-        public bool IsHit(Point point)
+        public override void SetVisibility(bool visible)
         {
-            double dx = point.X - DisplayX;
-            double dy = point.Y - DisplayY;
-            return (dx * dx + dy * dy) <= (HitRadius * HitRadius);
+            base.SetVisibility(visible);
+            _renderer.SetVisibility(visible);
         }
     }
 }

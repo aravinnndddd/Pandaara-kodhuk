@@ -1,0 +1,28 @@
+## Build Results & Artifacts
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+[Dd]ebug/
+[Rr]elease/
+
+## Visual Studio / VS Code / Rider
+.vs/
+.vscode/
+.idea/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.sln.docstates
+
+## Logs and diagnostics
+*.log
+debug.log
+
+## Sub-repositories / Clones
+Pandaara-kodhuk/
+
+## OS generated files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
