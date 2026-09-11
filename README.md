@@ -99,7 +99,7 @@ dotnet build
 dotnet run
 
 # Or launch compiled binary
-.\bin\Debug\net8.0-windows\DigitalMosquito.exe
+.\bin\Debug\net8.0-windows\PandaaraKodhuk.exe
 ```
 
 ---

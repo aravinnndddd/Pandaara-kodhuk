@@ -46,7 +46,7 @@ jobs:
           @"
           Pandaara കൊതുക് (Digital Mosquito)
           ===================================
-          Double-click DigitalMosquito.exe to run!
+          Double-click PandaaraKodhuk.exe to run!
           No installation or .NET runtime required.
           "@ | Out-File -FilePath "$publishDir/README.txt" -Encoding utf8
 
@@ -57,6 +57,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            DigitalMosquito-win-x64.zip
-            ./publish/DigitalMosquito-win-x64/DigitalMosquito.exe
+            PandaaraKodhuk-win-x64.zip
+            ./publish/DigitalMosquito-win-x64/PandaaraKodhuk.exe
           draft: false

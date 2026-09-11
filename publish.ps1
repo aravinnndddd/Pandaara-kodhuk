@@ -37,7 +37,7 @@ function Package-Release($sourceDir, $zipName) {
 Pandaara കൊതുക് (Digital Mosquito) & Desktop Creatures
 ======================================================
 How to run:
-  Double-click 'DigitalMosquito.exe' to start!
+  Double-click 'PandaaraKodhuk.exe' to start!
 
 Features & Progression:
   - Total-Kill Weapon Progression (11 Tiers):
@@ -82,7 +82,7 @@ Controls:
 
 # 3. Build Standalone (Zero dependencies)
 if ($Type -eq "Standalone" -or $Type -eq "Both") {
-    $outDir = Join-Path $publishRootDir "DigitalMosquito-Standalone-win-x64"
+    $outDir = Join-Path $publishRootDir "PandaaraKodhuk-Standalone-win-x64"
     Write-Host "`n[1/2] Building Standalone Portable Executable (win-x64)..." -ForegroundColor Magenta
     Write-Host "  -> Output: $outDir" -ForegroundColor Gray
     
@@ -97,13 +97,13 @@ if ($Type -eq "Standalone" -or $Type -eq "Both") {
         -o $outDir
 
     if ($CreateZip) {
-        Package-Release $outDir "DigitalMosquito-Standalone-win-x64.zip"
+        Package-Release $outDir "PandaaraKodhuk-Standalone-win-x64.zip"
     }
 }
 
 # 4. Build Lightweight (Framework-dependent)
 if ($Type -eq "Lightweight" -or $Type -eq "Both") {
-    $outDir = Join-Path $publishRootDir "DigitalMosquito-Lightweight-win-x64"
+    $outDir = Join-Path $publishRootDir "PandaaraKodhuk-Lightweight-win-x64"
     Write-Host "`n[2/2] Building Lightweight Executable (Requires .NET 8 Desktop Runtime)..." -ForegroundColor Magenta
     Write-Host "  -> Output: $outDir" -ForegroundColor Gray
     
@@ -117,7 +117,7 @@ if ($Type -eq "Lightweight" -or $Type -eq "Both") {
         -o $outDir
 
     if ($CreateZip) {
-        Package-Release $outDir "DigitalMosquito-Lightweight-win-x64.zip"
+        Package-Release $outDir "PandaaraKodhuk-Lightweight-win-x64.zip"
     }
 }
 
@@ -126,4 +126,4 @@ Write-Host "  Build & Publish Completed Successfully! " -ForegroundColor Green
 Write-Host "=========================================" -ForegroundColor Green
 Write-Host "Published files are located in:" -ForegroundColor White
 Write-Host "  $publishRootDir" -ForegroundColor Cyan
-Write-Host "`nShare the 'DigitalMosquito-Standalone-win-x64.zip' with anyone on Windows 10/11 - no installation needed!`n" -ForegroundColor Yellow
+Write-Host "`nShare the 'PandaaraKodhuk-Standalone-win-x64.zip' with anyone on Windows 10/11 - no installation needed!`n" -ForegroundColor Yellow
