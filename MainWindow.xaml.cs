@@ -56,6 +56,23 @@ namespace DigitalMosquito
             _inputManager.SwatClicked += OnSwatClicked;
             _inputManager.Wiping += OnWiping;
 
+            // Enable HUD hit-testing for speed controls and exit button
+            _inputManager.IsOverHud = (pt) =>
+            {
+                if (HudBadge.Visibility != Visibility.Visible) return false;
+                try
+                {
+                    Point hudPos = HudBadge.TranslatePoint(new Point(0, 0), OverlayCanvas);
+                    var bounds = new Rect(hudPos.X, hudPos.Y, HudBadge.ActualWidth, HudBadge.ActualHeight);
+                    bounds.Inflate(4, 4);
+                    return bounds.Contains(pt);
+                }
+                catch
+                {
+                    return false;
+                }
+            };
+
             // Attach 60 FPS Render loop
             CompositionTarget.Rendering += OnRenderFrame;
         }
@@ -282,11 +299,78 @@ namespace DigitalMosquito
             }
         }
 
+        private void SpeedBtn_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Border border && border.Tag is string tagStr &&
+                double.TryParse(tagStr, System.Globalization.CultureInfo.InvariantCulture, out double speed))
+            {
+                SetSpeed(speed);
+                e.Handled = true;
+            }
+        }
+
+        private void SetSpeed(double speed)
+        {
+            if (_mosquito != null)
+            {
+                _mosquito.SpeedMultiplier = speed;
+            }
+
+            // Reset all buttons to inactive state
+            ResetSpeedButton(SpeedBtnSlow, SpeedTxtSlow, "0.5x");
+            ResetSpeedButton(SpeedBtnNormal, SpeedTxtNormal, "1.0x");
+            ResetSpeedButton(SpeedBtnFast, SpeedTxtFast, "1.8x");
+            ResetSpeedButton(SpeedBtnChaos, SpeedTxtChaos, "⚡ 2.8x");
+
+            // Highlight active button
+            if (Math.Abs(speed - 0.5) < 0.05) SetButtonActive(SpeedBtnSlow, SpeedTxtSlow);
+            else if (Math.Abs(speed - 1.0) < 0.05) SetButtonActive(SpeedBtnNormal, SpeedTxtNormal);
+            else if (Math.Abs(speed - 1.8) < 0.05) SetButtonActive(SpeedBtnFast, SpeedTxtFast);
+            else if (Math.Abs(speed - 2.8) < 0.05) SetButtonActive(SpeedBtnChaos, SpeedTxtChaos);
+        }
+
+        private static void ResetSpeedButton(Border border, TextBlock text, string label)
+        {
+            border.Background = new SolidColorBrush(Color.FromArgb(32, 255, 255, 255));
+            text.Foreground = new SolidColorBrush(Color.FromRgb(136, 136, 136));
+            text.FontWeight = FontWeights.SemiBold;
+            text.Text = label;
+        }
+
+        private static void SetButtonActive(Border border, TextBlock text)
+        {
+            border.Background = new SolidColorBrush(Color.FromArgb(220, 255, 34, 34));
+            text.Foreground = Brushes.White;
+            text.FontWeight = FontWeights.Bold;
+        }
+
+        private void ExitBtn_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Close();
+            e.Handled = true;
+        }
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
                 Close();
+            }
+            else if (e.Key == Key.D1 || e.Key == Key.NumPad1)
+            {
+                SetSpeed(0.5);
+            }
+            else if (e.Key == Key.D2 || e.Key == Key.NumPad2)
+            {
+                SetSpeed(1.0);
+            }
+            else if (e.Key == Key.D3 || e.Key == Key.NumPad3)
+            {
+                SetSpeed(1.8);
+            }
+            else if (e.Key == Key.D4 || e.Key == Key.NumPad4)
+            {
+                SetSpeed(2.8);
             }
         }
 

@@ -15,6 +15,23 @@ namespace DigitalMosquito
 
         public double HitRadius { get; } = 42.0;
 
+        private double _speedMultiplier = 1.0;
+
+        public double SpeedMultiplier
+        {
+            get => _speedMultiplier;
+            set
+            {
+                double old = _speedMultiplier;
+                _speedMultiplier = Math.Clamp(value, 0.2, 5.0);
+                if (old > 0.001)
+                {
+                    _currentSpeed = (_currentSpeed / old) * _speedMultiplier;
+                    _targetSpeed = (_targetSpeed / old) * _speedMultiplier;
+                }
+            }
+        }
+
         // Visual position including high-frequency buzzing jitter
         public double DisplayX { get; private set; }
         public double DisplayY { get; private set; }
@@ -49,26 +66,26 @@ namespace DigitalMosquito
                 case 0: // Left
                     X = 30;
                     Y = _random.NextDouble() * (screenHeight - 100) + 50;
-                    _vx = 3 + _random.NextDouble() * 3;
-                    _vy = (_random.NextDouble() - 0.5) * 4;
+                    _vx = (3 + _random.NextDouble() * 3) * _speedMultiplier;
+                    _vy = (_random.NextDouble() - 0.5) * 4 * _speedMultiplier;
                     break;
                 case 1: // Right
                     X = screenWidth - 50;
                     Y = _random.NextDouble() * (screenHeight - 100) + 50;
-                    _vx = -(3 + _random.NextDouble() * 3);
-                    _vy = (_random.NextDouble() - 0.5) * 4;
+                    _vx = -(3 + _random.NextDouble() * 3) * _speedMultiplier;
+                    _vy = (_random.NextDouble() - 0.5) * 4 * _speedMultiplier;
                     break;
                 case 2: // Top
                     X = _random.NextDouble() * (screenWidth - 100) + 50;
                     Y = 30;
-                    _vx = (_random.NextDouble() - 0.5) * 4;
-                    _vy = 3 + _random.NextDouble() * 3;
+                    _vx = (_random.NextDouble() - 0.5) * 4 * _speedMultiplier;
+                    _vy = (3 + _random.NextDouble() * 3) * _speedMultiplier;
                     break;
                 default: // Bottom
                     X = _random.NextDouble() * (screenWidth - 100) + 50;
                     Y = screenHeight - 50;
-                    _vx = (_random.NextDouble() - 0.5) * 4;
-                    _vy = -(3 + _random.NextDouble() * 3);
+                    _vx = (_random.NextDouble() - 0.5) * 4 * _speedMultiplier;
+                    _vy = -(3 + _random.NextDouble() * 3) * _speedMultiplier;
                     break;
             }
 
@@ -90,20 +107,20 @@ namespace DigitalMosquito
                 if (mode < 2)
                 {
                     // Hovering pause (slow buzzing in place)
-                    _targetSpeed = 1.0 + _random.NextDouble() * 1.5;
+                    _targetSpeed = (1.0 + _random.NextDouble() * 1.5) * _speedMultiplier;
                     _speedChangeTimer = 0.4 + _random.NextDouble() * 0.8;
                 }
                 else if (mode < 5)
                 {
                     // Sudden dart burst
-                    _targetSpeed = 8.5 + _random.NextDouble() * 5.0;
-                    _speedChangeTimer = 0.3 + _random.NextDouble() * 0.5;
+                    _targetSpeed = (8.5 + _random.NextDouble() * 5.0) * _speedMultiplier;
+                    _speedChangeTimer = (0.3 + _random.NextDouble() * 0.5) / Math.Max(0.5, _speedMultiplier);
                 }
                 else
                 {
                     // Normal cruising
-                    _targetSpeed = 3.5 + _random.NextDouble() * 2.5;
-                    _speedChangeTimer = 0.8 + _random.NextDouble() * 1.5;
+                    _targetSpeed = (3.5 + _random.NextDouble() * 2.5) * _speedMultiplier;
+                    _speedChangeTimer = (0.8 + _random.NextDouble() * 1.5) / Math.Max(0.5, _speedMultiplier);
                 }
             }
 
@@ -176,7 +193,7 @@ namespace DigitalMosquito
             Y += _vy;
 
             // 4. Insect buzzing wobble (perpendicular to flight direction)
-            _jitterTime += deltaTime * 45.0;
+            _jitterTime += deltaTime * (35.0 + 20.0 * _speedMultiplier);
             double normalX = -_vy;
             double normalY = _vx;
             double normalLen = Math.Sqrt(normalX * normalX + normalY * normalY);
@@ -192,7 +209,7 @@ namespace DigitalMosquito
 
             // 5. Update heading angle and wing flutter phase
             UpdateAngle();
-            WingPhase = (WingPhase + deltaTime * 65.0) % (Math.PI * 2);
+            WingPhase = (WingPhase + deltaTime * (45.0 + 35.0 * _speedMultiplier)) % (Math.PI * 2);
         }
 
         private void UpdateAngle()

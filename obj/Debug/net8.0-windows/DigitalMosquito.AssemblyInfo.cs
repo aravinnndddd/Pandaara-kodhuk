@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DigitalMosquito")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a4030a536e6b9ca71c53620be4ea6b86984731a6")]
 [assembly: System.Reflection.AssemblyProductAttribute("DigitalMosquito")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DigitalMosquito")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

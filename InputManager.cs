@@ -66,6 +66,7 @@ namespace DigitalMosquito
 
         public event Action<Point>? SwatClicked;
         public event Action<Point>? Wiping;
+        public Func<Point, bool>? IsOverHud { get; set; }
 
         public InputManager(
             Window window,
@@ -121,8 +122,11 @@ namespace DigitalMosquito
                 var screenPt = new Point(hookStruct.pt.X, hookStruct.pt.Y);
                 var clientPt = ToClientPoint(screenPt);
 
-                // Intercept clicks on mosquito or blood to prevent passing through to underlying apps
-                if (msg == WM_LBUTTONDOWN)
+                bool isOverHud = IsOverHud != null && IsOverHud(clientPt);
+
+                // Intercept clicks on mosquito or blood to prevent passing through to underlying apps.
+                // Notice: If over HUD, we allow the click to hit our own window's buttons!
+                if (msg == WM_LBUTTONDOWN && !isOverHud)
                 {
                     _isLeftMouseDown = true;
                     if (_gameState.CurrentPhase == GamePhase.Flying)
@@ -170,7 +174,14 @@ namespace DigitalMosquito
             bool isOverInteractive = false;
             Cursor targetCursor = Cursors.Arrow;
 
-            if (_gameState.CurrentPhase == GamePhase.Flying)
+            bool isOverHud = IsOverHud != null && IsOverHud(clientPt);
+
+            if (isOverHud)
+            {
+                isOverInteractive = true;
+                targetCursor = Cursors.Arrow;
+            }
+            else if (_gameState.CurrentPhase == GamePhase.Flying)
             {
                 isOverInteractive = _mosquito.IsHit(clientPt);
                 if (isOverInteractive)
