@@ -2,17 +2,15 @@
 
 
 
-# [Project Name] 🎯
+# Pandaara കൊതുക്  🎯
 
 
 ## Basic Details
-### Team Name: [Name]
+### Team Name: Aravind P (ottak vazhi vetti vannavan)
 
 
 ### Team Members
-- Team Lead: [Name] - [College]
-- Member 2: [Name] - [College]
-- Member 3: [Name] - [College]
+- Team Lead: Aravind P - college of engineering perumon
 
 ### Project Description
 [2-3 lines about what your project does]
