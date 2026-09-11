@@ -135,15 +135,14 @@ dotnet run
 ## Project Documentation
 
 ### Screenshots
-*(Place screenshots here)*
 
-![Gameplay Screenshot 1](https://via.placeholder.com/800x450.png?text=Pandaara+Kodhuk+Gameplay)
+![Gameplay Screenshot 1](screenshots/screenshot1.png)
 *Desktop overlay with mosquito wandering and HUD active*
 
-![Blood Splatter & Wiper](https://via.placeholder.com/800x450.png?text=Blood+Splatter+and+Wiper)
+![Blood Splatter & Wiper](screenshots/screenshot2.png)
 *Blood splatters on screen with cleaning squeegee wiping the display*
 
-![Weapon Arsenal & Settings](https://via.placeholder.com/800x450.png?text=Weapon+Unlocks+and+HUD)
+![Weapon Arsenal & Settings](screenshots/screenshot3.png)
 *Progression bar, level unlocks, and settings drawer*
 
 ---
