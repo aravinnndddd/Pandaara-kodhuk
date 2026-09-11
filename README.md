@@ -4,6 +4,8 @@
 
 > The ultimate useless desktop menace — a hyper-realistic, annoying digital mosquito that buzzes over your windows, splatters blood on your screen when swatted, and forces you to scrub your monitor clean!
 
+📖 **Read the Origin Story:** [The Story Behind Pandara Kothuk 🦟 (Storytelling.md)](Storytelling.md)
+
 ---
 
 ## Basic Details
@@ -49,6 +51,22 @@ We built a transparent, topmost desktop overlay that introduces realistic mosqui
   - `System.Windows.Threading` (60 FPS game loop and particle simulation)
   - `System.Text.Json` (Persistent save game and kill progression system)
 - **Tools used:** Visual Studio, Visual Studio Code, .NET CLI, Git, PowerShell
+
+### 📁 Modular Architecture
+```text
+Pandaara-kodhuk/
+├── Creatures/           # Entity models (Mosquito, Spider, GiantSpider, BossCreatures)
+├── Rendering/           # Procedural vector renderers (Mosquito, Spiders, Monsters, Glass Cracks)
+├── Systems/             # Core game systems (Progression, Cleaners, Jumpscares, Audio, Weapons, Save)
+├── Config/              # Game balance, blood settings, and state configs
+├── Sounds/              # Audio clips and sound effects
+├── .github/workflows/   # GitHub Actions automated release pipeline
+├── MainWindow.xaml/.cs  # Transparent desktop overlay HUD & game canvas
+├── publish.ps1          # 1-click zero-dependency release builder
+├── Storytelling.md      # The origin story of the project
+├── README.md            # Project documentation
+└── index.html           # TinkerHub project journal
+```
 
 #### For Hardware:
 - *N/A (Pure software madness — no real mosquitoes were harmed, though monitor longevity may vary)*
