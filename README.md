@@ -4,6 +4,7 @@
 
 > The ultimate useless desktop menace — a hyper-realistic, annoying digital mosquito that buzzes over your windows, splatters blood on your screen when swatted, and forces you to scrub your monitor clean!
 
+🌐 **Live Website:** [https://aravinnndddd.github.io/Pandaara-kodhuk/PK-Web/](https://aravinnndddd.github.io/Pandaara-kodhuk/PK-Web/)  
 📖 **Read the Origin Story:** [The Story Behind Pandara Kothuk 🦟 (Storytelling.md)](Storytelling.md)
 
 ---
@@ -171,6 +172,9 @@ graph TD
 ---
 
 ## Project Demo
+
+### Live Website
+🌐 **[https://aravinnndddd.github.io/Pandaara-kodhuk/PK-Web/](https://aravinnndddd.github.io/Pandaara-kodhuk/PK-Web/)**
 
 ### Video
 [Add your demo video link here]
