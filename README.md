@@ -5,7 +5,8 @@
 > The ultimate useless desktop menace — a hyper-realistic, annoying digital mosquito that buzzes over your windows, splatters blood on your screen when swatted, and forces you to scrub your monitor clean!
 
 🌐 **Live Website:** [https://aravinnndddd.github.io/Pandaara-kodhuk/PK-Web/](https://aravinnndddd.github.io/Pandaara-kodhuk/PK-Web/)  
-📖 **Read the Origin Story:** [The Story Behind Pandara Kothuk 🦟 (Storytelling.md)](Storytelling.md)
+📖 **Read the Origin Story:** [The Story Behind Pandara Kothuk 🦟 (Storytelling.md)](Storytelling.md)  
+🎥 **Gameplay Demo Video:** [Google Drive Demo Video Folder](https://drive.google.com/drive/folders/1wire8gEEX_41Fwz6iz7yKYLD_7R0mhqK?usp=sharing)
 
 ---
 
@@ -176,7 +177,7 @@ graph TD
 🌐 **[https://aravinnndddd.github.io/Pandaara-kodhuk/PK-Web/](https://aravinnndddd.github.io/Pandaara-kodhuk/PK-Web/)**
 
 ### Video
-[Add your demo video link here]
+🎥 **[Watch Demo Video / Gameplay Footage (Google Drive)](https://drive.google.com/drive/folders/1wire8gEEX_41Fwz6iz7yKYLD_7R0mhqK?usp=sharing)**  
 *Demonstration of mosquito flight, swatting action, blood splatter mechanics, weapon unlocks, and wiper tool.*
 
 ---
